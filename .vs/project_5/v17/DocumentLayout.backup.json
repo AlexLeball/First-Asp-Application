@@ -26,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -61,10 +61,6 @@
               "Name": "ST:135:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
-            },
-            {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "ApplicationDbContext.cs",
@@ -87,7 +83,8 @@
               "RelativeToolTip": "project_5\\Models\\Entities.cs\\EFCoreDbContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-27T15:37:57.067Z"
+              "WhenOpened": "2025-02-27T15:37:57.067Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -99,7 +96,8 @@
               "RelativeToolTip": "project_5\\Models\\Entities.cs\\Repair.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-27T15:35:52.531Z"
+              "WhenOpened": "2025-02-27T15:35:52.531Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -111,7 +109,12 @@
               "RelativeToolTip": "project_5\\Models\\Entities.cs\\Car.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-27T15:35:37.677Z"
+              "WhenOpened": "2025-02-27T15:35:37.677Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
             }
           ]
         },
