@@ -1,10 +1,11 @@
-﻿namespace project_5.Models.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace project_5.Models.Entities
 {
     public class CarModel
     {
-        int Id { get; set; }
-        string? Model { get; set; }
-
+        public int Id { get; set; }
+        public required string Model { get; set; }
         public virtual ICollection<Car>? Cars { get; set; }
     }
 }

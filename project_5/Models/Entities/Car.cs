@@ -1,12 +1,14 @@
-﻿namespace project_5.Models.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace project_5.Models.Entities
 {
     
     public class Car
     {
         public int Id { get; set; }
         public int Year { get; set; }
-        public string? Finition { get; set; }
-        public string? UrlPhoto { get; set; }
+        public required string Finition { get; set; }
+        public required string UrlPhoto { get; set; }
         public DateTime AvailableDate { get; set; }
         public DateTime PurchaseDate { get; set; }
         public DateTime SaleDate { get; set; }
@@ -15,11 +17,9 @@
         //has a navigation property to the Repair table
         public virtual ICollection<Repair>? Repairs { get; set; }
         //has a foreign key to the CarModel table
-        public int ModelId { get; set; }
-        public virtual CarModel Model { get; set; }
+        public required virtual CarModel CarModel { get; set; }
         //has a foreign key to the Brand table
-        public int BrandId { get; set; }
-        public virtual Brand Name { get; set; }
+        public required virtual Brand Brand { get; set; }
     }
 }
 

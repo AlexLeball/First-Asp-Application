@@ -1,11 +1,13 @@
-﻿namespace project_5.Models.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace project_5.Models.Entities
 {
     public class Repair
     {
         public int Id { get; set; }
-        public int Price { get; set; }
-        public virtual Car? Car { get; set; }
-        public string? Description { get; set; }
+        public required int Price { get; set; }
+        public required virtual Car Car { get; set; }
+        public required string Description { get; set; }
 
     }
 }
