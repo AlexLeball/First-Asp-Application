@@ -1,0 +1,19 @@
+﻿@model List<project_5.Models.Entities.Car>
+
+@{
+    ViewData["Title"] = "Car Show";
+}
+
+<h1>Welcome to the Car Show</h1>
+
+<ul>
+    @foreach (var car in Model)
+    {
+        <li>
+            <strong>@car.Brand.Name - @car.CarModel.Model</strong> (@car.Year)
+            <br>
+            <img src="@car.UrlPhoto" alt="Car Image" width="200" />
+            <p>Finition: @car.Finition</p>
+        </li>
+    }
+</ul>

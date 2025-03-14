@@ -1,0 +1,51 @@
+﻿@model project_5.Models.AddCarViewModel
+
+@{
+    ViewData["Title"] = "Add Car";
+}
+
+<h1>Add a Car</h1>
+
+<form asp-action="AddCar" method="post">
+    <div class="form-group">
+        <label asp-for="BrandId">Brand</label>
+        <select asp-for="BrandId" class="form-control">
+            <option value="">Select a brand</option>
+            @foreach (var brand in Model.Brands)
+            {
+                <option value="@brand.Id">@brand.Name</option>
+            }
+        </select>
+        <span asp-validation-for="BrandId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CarModelId">Model</label>
+        <select asp-for="CarModelId" class="form-control">
+            <option value="">Select a model</option>
+            @foreach (var carModel in Model.CarModels)
+            {
+                <option value="@carModel.Id">@carModel.Model</option>
+            }
+        </select>
+        <span asp-validation-for="CarModelId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Year">Year</label>
+        <input asp-for="Year" class="form-control" />
+        <span asp-validation-for="Year" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SalePrice">Price</label>
+        <input asp-for="SalePrice" class="form-control" />
+        <span asp-validation-for="SalePrice" class="text-danger"></span>
+    </div>
+
+    <br />
+    <button type="submit" class="btn btn-primary">Add Car</button>
+</form>
+
+<br />
+<a asp-action="Cars">Back to Car List</a>

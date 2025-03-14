@@ -25,6 +25,7 @@ builder.Services.AddControllersWithViews();
 // add razor pages
 builder.Services.AddRazorPages();
 
+
 var app = builder.Build();
 // **SEED ADMIN ROLE**
 using (var scope = app.Services.CreateScope())
@@ -48,6 +49,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
 app.UseAuthentication();  // Ensure authentication is in place
 app.UseAuthorization();
 

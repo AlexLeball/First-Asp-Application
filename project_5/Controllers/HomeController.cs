@@ -28,5 +28,29 @@ namespace project_5.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult About()
+        {
+            return View();
+        }
+
+
+
+        IActionResult Login()
+        {
+            return View("~/Views/User/Login.cshtml");
+        }
+
+        public IActionResult CarList()
+        {
+            return View("~/Views/CarList/Cars.cshtml"); 
+        }
+
+
+        [Route("details/{id:int}")] // Route: /products/details/5
+        public IActionResult Details(int id)
+        {
+            return View();
+        }
     }
 }
