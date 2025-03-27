@@ -1,0 +1,18 @@
+﻿using project_5.Models.Entities;
+
+namespace project_5.Models.ViewModels
+{
+    public class EditCarViewModel
+    {
+        public int Id { get; set; }             
+        public int BrandId { get; set; }        
+        public int CarModelId { get; set; }    
+        public int Year { get; set; }          
+        public decimal SalePrice { get; set; }  
+        public string UrlPhoto { get; set; }   
+
+      
+        public List<Brand> Brands { get; set; } 
+        public List<CarModel> CarModels { get; set; } 
+    }
+}

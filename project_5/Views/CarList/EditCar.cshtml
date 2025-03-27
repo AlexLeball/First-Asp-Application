@@ -1,0 +1,32 @@
+﻿@model project_5.Models.ViewModels.EditCarViewModel
+
+<h1>Edit Car</h1>
+
+<form asp-action="EditCar" method="post">
+    <div class="form-group">
+        <label for="BrandId">Brand</label>
+        <select asp-for="BrandId" class="form-control" asp-items="@(new SelectList(Model.Brands, "Id", "Name"))"></select>
+    </div>
+
+    <div class="form-group">
+        <label for="CarModelId">Car Model</label>
+        <select asp-for="CarModelId" class="form-control" asp-items="@(new SelectList(Model.CarModels, "Id", "Model"))"></select>
+    </div>
+
+    <div class="form-group">
+        <label for="Year">Year</label>
+        <input type="number" asp-for="Year" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="SalePrice">Sale Price</label>
+        <input type="number" asp-for="SalePrice" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="UrlPhoto">Photo URL</label>
+        <input type="text" asp-for="UrlPhoto" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>

@@ -4,16 +4,28 @@
     ViewData["Title"] = "Car Show";
 }
 
-<h1>Welcome to the Car Show</h1>
+<h1>Our Cars</h1>
+
+<!-- Display a list of cars -->
 
 <ul>
     @foreach (var car in Model)
     {
         <li>
-            <strong>@car.Brand.Name - @car.CarModel.Model</strong> (@car.Year)
-            <br>
-            <img src="@car.UrlPhoto" alt="Car Image" width="200" />
-            <p>Finition: @car.Finition</p>
+            <!-- Make each car clickable by wrapping it in an anchor tag -->
+            <a href="@Url.Action("CarDetails", "CarList", new { id = car.Id })">
+                <strong>@car.Brand.Name - @car.CarModel.Model</strong> (@car.Year)
+                <br>
+                <img src="@car.UrlPhoto" alt="Car Image" width="200" />
+                <p>Finition: @car.Finition</p>
+            </a>
         </li>
     }
 </ul>
+
+<!-- Add a link to the AddCar action method for admins-->
+
+@if (User.IsInRole("Admin"))
+{
+    <a href="@Url.Action("AddCar", "CarList")">Add a new car</a>
+}
