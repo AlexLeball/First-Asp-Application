@@ -1,84 +1,146 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using project_5.Data;
 using project_5.Models.Entities;
-using System.Collections.Generic;
+using project_5.Models.ViewModels;
+using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace project_5.Controllers
 {
     public class CarListController : Controller
     {
-        // Static car list to persist while app is running
-        private static List<Car> cars = new List<Car>
-        {
-            new Car
-            {
-                Id = 1,
-                Brand = new Brand { Id = 1, Name = "Toyota" },
-                CarModel = new CarModel { Id = 1, Model = "Corolla" },
-                Year = 2020,
-                UrlPhoto = "https://ligierautomotive.com/wp-content/uploads/2017/12/concept-car.jpg",
-                Finition = "Red"
-            },
-            new Car
-            {
-                Id = 2,
-                Brand = new Brand { Id = 2, Name = "Honda" },
-                CarModel = new CarModel { Id = 2, Model = "Civic" },
-                Year = 2022,
-                UrlPhoto = "https://ligierautomotive.com/wp-content/uploads/2017/12/concept-car.jpg",
-                Finition = "Black"
-            },
-            new Car
-            {
-                Id = 3,
-                Brand = new Brand { Id = 3, Name = "BMW" },
-                CarModel = new CarModel { Id = 3, Model = "M3" },
-                Year = 2021,
-                UrlPhoto = "https://ligierautomotive.com/wp-content/uploads/2017/12/concept-car.jpg",
-                Finition = "Blue"
-            }
-        };
+        private readonly ApplicationDbContext _context;
 
-        // Display the list of cars
-        [HttpGet]
-        public IActionResult Cars()
+        public CarListController(ApplicationDbContext context)
         {
+            _context = context;
+        }
+
+        /// <summary>
+        /// Display the list of cars from the database. Links to the Cars view.
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> Cars()
+        {
+            var cars = await _context.Cars
+                .Include(c => c.Brand)
+                .Include(c => c.CarModel)
+                .ToListAsync();
+
             return View(cars);
         }
 
-        // Show details of a specific car
+        /// <summary>
+        /// Show details of a specific car.
+        /// </summary>
         [HttpGet]
-        public IActionResult CarDetails(int id)
+        public async Task<IActionResult> CarDetails(int id)
         {
-            var car = cars.FirstOrDefault(c => c.Id == id);
+            var car = await _context.Cars
+                .Include(c => c.Brand)
+                .Include(c => c.CarModel)
+                .FirstOrDefaultAsync(c => c.Id == id);
 
             if (car == null)
             {
-                return NotFound(); // Return a 404 error if the car is not found
+                return NotFound();
             }
 
             return View(car);
         }
 
-        // Show form to add a new car
+        /// <summary>
+        /// Show the form to add a new car.
+        /// </summary>
         [HttpGet]
-        public IActionResult AddCar()
+        public async Task<IActionResult> AddCarForm()
         {
-            return View();
+            var model = new AddCarViewModel
+            {
+                Brands = await _context.Brands.ToListAsync(),
+                CarModels = await _context.CarModels.ToListAsync()
+            };
+
+            return View(model);
         }
 
-        // Handle form submission for adding a new car
+        /// <summary>
+        /// Add a new car and redirect to CarDetails.
+        /// </summary>
         [HttpPost]
-        public IActionResult AddCar(Car newCar)
+        public async Task<IActionResult> AddCar(AddCarViewModel model)
         {
-            if (ModelState.IsValid)
+            var carModel = await _context.CarModels.FirstOrDefaultAsync(s => s.Id == model.CarModelId);
+            if (carModel == null)
             {
-                newCar.Id = cars.Count + 1; // Assign a new ID
-                cars.Add(newCar);
-                return RedirectToAction("Cars"); // Redirect to the car list
+                model.Brands = await _context.Brands.ToListAsync();
+                model.CarModels = await _context.CarModels.ToListAsync();
+                return View("AddCar", model);
             }
 
-            return View(newCar); // Return the form with validation errors
+            var brand = await _context.Brands.FirstOrDefaultAsync(b => b.Id == model.BrandId);
+            if (brand == null)
+            {
+                model.Brands = await _context.Brands.ToListAsync();
+                model.CarModels = await _context.CarModels.ToListAsync();
+                return View("AddCar", model);
+            }
+
+            var newCar = new Car
+            {
+                Brand = brand,
+                CarModel = carModel,
+                Year = model.Year,
+                SalePrice = model.SalePrice,
+                UrlPhoto = model.UrlPhoto,
+                PurchasePrice = 0,
+                Finition = "Standard",
+                AvailableDate = DateTime.Now,
+                PurchaseDate = DateTime.MinValue,
+                SaleDate = DateTime.Now
+            };
+            _context.Cars.Add(newCar);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("CarDetails", new { id = newCar.Id });
+        }
+
+        /// <summary>
+        /// Add a new brand.
+        /// </summary>
+        [HttpPost]
+        public IActionResult AddBrand([FromBody] AddBrandViewModel model)
+        {
+            if (_context.Brands.Any(b => b.Name == model.BrandName))
+            {
+                return Conflict("Brand already exists.");
+            }
+
+            var brand = new Brand { Name = model.BrandName };
+            _context.Brands.Add(brand);
+            _context.SaveChanges();
+
+            return Ok(new { id = brand.Id, name = brand.Name });
+        }
+
+        /// <summary>
+        /// Add a new car model.
+        /// </summary>
+        [HttpPost]
+        public IActionResult AddCarModel([FromBody] AddCarModelViewModel model)
+        {
+            if (_context.CarModels.Any(m => m.Model == model.ModelName))
+            {
+                return Conflict("Model already exists.");
+            }
+
+            var carModel = new CarModel { Model = model.ModelName };
+            _context.CarModels.Add(carModel);
+            _context.SaveChanges();
+
+            return Ok(new { id = carModel.Id, name = carModel.Model });
         }
     }
 }

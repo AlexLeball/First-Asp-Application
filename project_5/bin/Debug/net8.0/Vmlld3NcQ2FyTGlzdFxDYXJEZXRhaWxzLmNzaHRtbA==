@@ -1,0 +1,10 @@
+﻿@model project_5.Models.Entities.Car
+
+@{
+    ViewData["Title"] = "Car Details";
+}
+
+<h1>Car Details</h1>
+
+
+

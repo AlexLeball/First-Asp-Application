@@ -1,0 +1,180 @@
+﻿@model project_5.Models.ViewModels.AddCarViewModel
+
+<form asp-controller="CarList" asp-action="AddCar" method="post">
+    <!-- Brand Selection -->
+    <div class="form-group">
+        <label for="brandDropdown">Brand</label>
+        <div class="d-flex">
+            <select id="brandDropdown" name="BrandId" class="form-control" required>
+                <option value="">Select a brand</option>
+                @foreach (var brand in Model.Brands)
+                {
+                    <option value="@brand.Id">@brand.Name</option>
+                }
+            </select>
+            <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#addBrandModal">
+                + New Brand
+            </button>
+        </div>
+        <span class="text-danger" asp-validation-for="BrandId"></span>
+    </div>
+
+    <!-- Car Model (Style) Selection -->
+    <div class="form-group mt-3">
+        <label for="carModelDropdown">Car Model (Style)</label>
+        <div class="d-flex">
+            <select id="carModelDropdown" name="CarModelId" class="form-control" required>
+                <option value="">Select a model</option>
+                @foreach (var carModel in Model.CarModels)
+                {
+                    <option value="@carModel.Id">@carModel.Model</option>
+                }
+            </select>
+            <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#addCarModelModal">
+                + New Model
+            </button>
+        </div>
+        <span class="text-danger" asp-validation-for="CarModelId"></span>
+    </div>
+
+    <!-- Other Car Information -->
+    <div class="form-group mt-3">
+        <label for="year">Year</label>
+        <input type="number" id="year" name="Year" class="form-control" required />
+        <span class="text-danger" asp-validation-for="Year"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <label for="salePrice">Sale Price</label>
+        <input type="number" id="salePrice" name="SalePrice" class="form-control" required />
+        <span class="text-danger" asp-validation-for="SalePrice"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <label for="UrlPhoto">Car Photo</label>
+        <input type="url" id="UrlPhoto" name="UrlPhoto" class="form-control" required />
+        <span class="text-danger" asp-validation-for="UrlPhoto"></span>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary mt-3">Add Car</button>
+</form>
+
+
+<!-- Modal for Adding a New Brand -->
+<div class="modal fade" id="addBrandModal" tabindex="-1" aria-labelledby="addBrandModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Brand</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="newBrandName" class="form-control" placeholder="Enter brand name" />
+                <span id="brandErrorMessage" class="text-danger"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="addBrand()">Add Brand</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Adding a New Car Model -->
+<div class="modal fade" id="addCarModelModal" tabindex="-1" aria-labelledby="addCarModelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Car Model (Style)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="newCarModelName" class="form-control" placeholder="Enter model name" />
+                <span id="carModelErrorMessage" class="text-danger"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="addCarModel()">Add Model</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Return addCar method on submit -->
+
+
+
+<script>
+    function addBrand() {
+        var brandName = document.getElementById("newBrandName").value.trim();
+        var errorMessage = document.getElementById("brandErrorMessage");
+
+        if (!brandName) {
+            errorMessage.textContent = "Brand name cannot be empty.";
+            return;
+        }
+
+        fetch('/CarList/AddBrand', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ brandName: brandName })
+        })
+            .then(response => {
+                if (response.ok) return response.json();
+                if (response.status === 409) throw new Error("Brand already exists.");
+                throw new Error("An error occurred.");
+            })
+            .then(data => {
+                var dropdown = document.getElementById("brandDropdown");
+                var option = document.createElement("option");
+                option.value = data.id;
+                option.textContent = data.name;
+                dropdown.appendChild(option);
+                dropdown.value = data.id;
+
+                errorMessage.textContent = "";
+                document.getElementById("newBrandName").value = "";
+                new bootstrap.Modal(document.getElementById('addBrandModal')).hide();
+            })
+            .catch(error => {
+                errorMessage.textContent = error.message;
+            });
+    }
+
+    function addCarModel() {
+        var carModelName = document.getElementById("newCarModelName").value.trim();
+        var errorMessage = document.getElementById("carModelErrorMessage");
+
+        if (!carModelName) {
+            errorMessage.textContent = "Model name cannot be empty.";
+            return;
+        }
+
+        fetch('/CarList/AddCarModel', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ modelName: carModelName })
+        })
+            .then(response => {
+                if (response.ok) return response.json();
+                if (response.status === 409) throw new Error("Model already exists.");
+                throw new Error("An error occurred.");
+            })
+            .then(data => {
+                var dropdown = document.getElementById("carModelDropdown");
+                var option = document.createElement("option");
+                option.value = data.id;
+                option.textContent = data.name;
+                dropdown.appendChild(option);
+                dropdown.value = data.id;
+
+                errorMessage.textContent = "";
+                document.getElementById("newCarModelName").value = "";
+                new bootstrap.Modal(document.getElementById('addCarModelModal')).hide();
+            })
+            .catch(error => {
+                errorMessage.textContent = error.message;
+            });
+    }
+</script>
