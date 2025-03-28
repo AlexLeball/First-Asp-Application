@@ -20,6 +20,8 @@ namespace project_5.Models.Entities
         public required virtual CarModel CarModel { get; set; }
         //has a foreign key to the Brand table
         public required virtual Brand Brand { get; set; }
+        public int BrandId { get; set; }
+        public int CarModelId { get; set; }
     }
 }
 

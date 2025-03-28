@@ -9,7 +9,6 @@ namespace project_5.Models.ViewModels
         public int Year { get; set; }
         public decimal SalePrice { get; set; }
         public string UrlPhoto { get; set; }
-
         public List<Brand> Brands { get; set; } = new();
         public List<CarModel> CarModels { get; set; } = new();
     }

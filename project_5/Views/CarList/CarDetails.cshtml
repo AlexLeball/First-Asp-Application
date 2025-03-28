@@ -17,7 +17,16 @@
 <!-- Formulaire pour supprimer la voiture si admin-->
 @if (User.IsInRole("Admin"))
 {
+    <br>
+    <a asp-action="EditCar" asp-route-id="@Model.Id" class="btn btn-primary">Edit Car</a>
+    <br>
+    <a asp-action="AddCarForm" class="btn btn-primary">Add a new car</a>
+    <br>
+
     <form asp-action="DeleteCar" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this car?');">
         <button type="submit" class="btn btn-danger">Delete Car</button>
     </form>
+    <br>
+    <a asp-action="Cars" class="btn btn-primary">Back to Cars</a>
+    <br>
 }

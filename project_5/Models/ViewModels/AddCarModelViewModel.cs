@@ -2,8 +2,6 @@
 {
     public class AddCarModelViewModel
     {
-        public string ModelName { get; set; } = string.Empty;
-
-      
+        public string ModelName { get; set; } = string.Empty;     
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using project_5.Models;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace project_5.Controllers
@@ -47,7 +48,7 @@ namespace project_5.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Cars", "CarList");
             }
 
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
@@ -59,7 +60,7 @@ namespace project_5.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", "User");
+            return RedirectToAction("Cars", "CarList");
         }
 
         // Show registration page
@@ -69,7 +70,6 @@ namespace project_5.Controllers
             return View(new RegisterViewModel());
         }
 
-        // Process registration
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
@@ -80,15 +80,19 @@ namespace project_5.Controllers
 
             var user = new IdentityUser
             {
-                UserName = model.Email,
-                Email = model.Email
+                UserName = model.Username,
+                Email = model.Email,
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
-                // Assign the 'User' role by default
+                // Add claims and roles after successful registration
+                var displayName = model.Username;
+                await _userManager.AddClaimAsync(user, new Claim("DisplayName", displayName));
+
+                // Assign default roles (e.g., "User")
                 var userRoleExist = await _roleManager.RoleExistsAsync("User");
                 if (!userRoleExist)
                 {
@@ -96,7 +100,10 @@ namespace project_5.Controllers
                     await _roleManager.CreateAsync(userRole);
                 }
 
-                if (user.Email == "jacques@example.com")
+                await _userManager.AddToRoleAsync(user, "User");
+
+                // If it's a specific user (e.g., admin), assign the admin role
+                if (user.Email == "admin@example.com")
                 {
                     var adminRoleExist = await _roleManager.RoleExistsAsync("Admin");
                     if (!adminRoleExist)
@@ -107,11 +114,9 @@ namespace project_5.Controllers
                     await _userManager.AddToRoleAsync(user, "Admin");
                 }
 
-                await _userManager.AddToRoleAsync(user, "User");
-
                 // Sign in the user after successful registration
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Cars", "CarList");
             }
 
             foreach (var error in result.Errors)
@@ -121,5 +126,82 @@ namespace project_5.Controllers
 
             return View(model);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account"); // Handle unauthenticated user
+            }
+
+            var model = new ProfileViewModel
+            {
+                Username = user.UserName,
+                Email = user.Email,
+            };
+
+            return View(model);
+        }
+
+        // Process profile update
+        [HttpPost]
+        public async Task<IActionResult> Profile(ProfileViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Validate uniqueness before updating username or email
+            if (user.UserName != model.Username)
+            {
+                var existingUser = await _userManager.FindByNameAsync(model.Username);
+                if (existingUser != null)
+                {
+                    ModelState.AddModelError("Username", "This username is already taken.");
+                    return View(model);
+                }
+                user.UserName = model.Username;
+            }
+
+            if (user.Email != model.Email)
+            {
+                var existingEmail = await _userManager.FindByEmailAsync(model.Email);
+                if (existingEmail != null)
+                {
+                    ModelState.AddModelError("Email", "This email is already in use.");
+                    return View(model);
+                }
+                user.Email = model.Email;
+
+                // Optionally, require email confirmation again
+                user.EmailConfirmed = false;
+            }
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = "Profile updated successfully!";
+                return RedirectToAction("Profile");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View(model);
+        }
+
     }
 }

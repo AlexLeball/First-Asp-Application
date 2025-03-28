@@ -55,7 +55,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=CarList}/{action=Cars}/{id?}");
 app.MapRazorPages();
 
 app.Run();
@@ -66,6 +66,7 @@ async Task SeedRolesAndAdminAsync(IServiceProvider serviceProvider)
     var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
+    string username = "Jacques";
     string adminRole = "Admin";
     string adminEmail = "jacques@example.com";
     string adminPassword = "Password@123"; // Change for production
@@ -91,7 +92,7 @@ async Task SeedRolesAndAdminAsync(IServiceProvider serviceProvider)
     {
         adminUser = new IdentityUser
         {
-            UserName = adminEmail,
+            UserName = username,
             Email = adminEmail,
             EmailConfirmed = true
         };

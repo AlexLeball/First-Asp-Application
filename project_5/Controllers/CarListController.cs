@@ -4,18 +4,22 @@ using project_5.Data;
 using project_5.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using project_5.Models.ViewModels;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace project_5.Controllers
 {
     public class CarListController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<CarListController> _logger;
 
-        public CarListController(ApplicationDbContext context)
+        public CarListController(ApplicationDbContext context, ILogger<CarListController> logger)
         {
+            _logger = logger;
             _context = context;
         }
 
@@ -103,6 +107,8 @@ namespace project_5.Controllers
                 PurchaseDate = DateTime.MinValue,
                 SaleDate = DateTime.Now
             };
+
+
             _context.Cars.Add(newCar);
             await _context.SaveChangesAsync();
 
@@ -173,35 +179,32 @@ namespace project_5.Controllers
             return RedirectToAction("Cars");
         }
 
-        /// <summary>
-        /// Afficher le formulaire pour éditer une voiture.
-        /// </summary>
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditCar(int id)
         {
-            // Trouver la voiture par ID
+            // Fetch the car along with the associated Brand and CarModel
             var car = await _context.Cars
-                                    .Include(c => c.Brand)
-                                    .Include(c => c.CarModel)
+                                    .Include(c => c.Brand)  // Include the Brand navigation property
+                                    .Include(c => c.CarModel)  // Include the CarModel navigation property
                                     .FirstOrDefaultAsync(c => c.Id == id);
 
-            // Si la voiture n'existe pas, retourner une erreur 404
             if (car == null)
             {
                 return NotFound();
             }
 
-            // Créer un modèle de vue avec les informations de la voiture
+            // Create a ViewModel for the form
             var model = new EditCarViewModel
             {
                 Id = car.Id,
-                BrandId = car.Brand.Id,
+                BrandId = car.Brand.Id, // Pass the current BrandId to the view
                 CarModelId = car.CarModel.Id,
                 Year = car.Year,
                 SalePrice = car.SalePrice,
                 UrlPhoto = car.UrlPhoto,
-                // Ajoutez ici d'autres propriétés nécessaires pour l'édition
+
+                // Pass a list of available brands to the view
                 Brands = await _context.Brands.ToListAsync(),
                 CarModels = await _context.CarModels.ToListAsync()
             };
@@ -217,41 +220,46 @@ namespace project_5.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditCar(EditCarViewModel model)
         {
-            // Vérifier si le modèle est valide
-            if (ModelState.IsValid)
+            _logger.LogInformation("EditCar POST request started for CarId: {CarId}", model.Id);
+
+            // Check if the model is valid
+            if (!ModelState.IsValid)
             {
-                // Trouver la voiture par ID
-                var car = await _context.Cars
-                                        .Include(c => c.Brand)
-                                        .Include(c => c.CarModel)
-                                        .FirstOrDefaultAsync(c => c.Id == model.Id);
-
-                // Si la voiture n'existe pas, retourner une erreur 404
-                if (car == null)
-                {
-                    return NotFound();
-                }
-
-                // Mettre à jour les informations de la voiture
-                car.Brand = await _context.Brands.FirstOrDefaultAsync(b => b.Id == model.BrandId);
-                car.CarModel = await _context.CarModels.FirstOrDefaultAsync(m => m.Id == model.CarModelId);
-                car.Year = model.Year;
-                car.SalePrice = model.SalePrice;
-                car.UrlPhoto = model.UrlPhoto;
-
-                // Sauvegarder les changements dans la base de données
-                await _context.SaveChangesAsync();
-
-                // Rediriger vers la page de détails de la voiture ou vers la liste des voitures
-                return RedirectToAction("CarDetails", new { id = car.Id });
+                _logger.LogWarning("Model is invalid. Returning to the view.");
+                // Reload brands and car models in case of invalid form submission
+                model.Brands = await _context.Brands.ToListAsync();
+                model.CarModels = await _context.CarModels.ToListAsync();
+                return View(model);
             }
 
-            // Si le modèle est invalide, retourner la vue avec les erreurs
-            model.Brands = await _context.Brands.ToListAsync();
-            model.CarModels = await _context.CarModels.ToListAsync();
-            return View(model);
-        }
+            // Fetch the car from the database by its ID
+            var car = await _context.Cars
+                                    .Include(c => c.Brand)
+                                    .Include(c => c.CarModel)
+                                    .FirstOrDefaultAsync(c => c.Id == model.Id);
 
+            if (car == null)
+            {
+                return NotFound();
+            }
+
+            // Update the car with new values from the form
+            car.BrandId = model.BrandId;
+            car.CarModelId = model.CarModelId;
+            car.Year = model.Year;
+            car.SalePrice = model.SalePrice;
+            car.UrlPhoto = model.UrlPhoto;
+            car.Finition = model.Finition;
+
+            _logger.LogInformation("Updating Car with ID: {CarId}", model.Id);
+            _logger.LogInformation("Selected BrandId: {BrandId}, CarModelId: {CarModelId}", model.BrandId, model.CarModelId);
+
+            _context.Entry(car).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            // Redirect to the CarDetails page after update
+            return RedirectToAction("CarDetails", new { id = car.Id });
+        }
 
 
     }
