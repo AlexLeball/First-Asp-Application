@@ -1,4 +1,5 @@
 ﻿using project_5.Models.Entities;
+using System.Security.Policy;
 
 namespace project_5.Models.ViewModels
 {
@@ -8,6 +9,8 @@ namespace project_5.Models.ViewModels
         public int CarModelId { get; set; }
         public int Year { get; set; }
         public decimal SalePrice { get; set; }
+        public decimal PurchasePrice { get; set; }
+        public DateTime AvailableDate { get; set; }
         public string UrlPhoto { get; set; }
         public string Finition { get; set; }
         public List<Repair> Repairs { get; set; } = new();

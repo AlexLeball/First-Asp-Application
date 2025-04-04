@@ -70,56 +70,94 @@ namespace project_5.Controllers
 
             return View(model);
         }
-
-        /// <summary>
-        /// Add a new car and redirect to CarDetails.
-        /// </summary>
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddCar(AddCarViewModel model)
         {
+            // Check if the selected CarModel exists
             var carModel = await _context.CarModels.FirstOrDefaultAsync(s => s.Id == model.CarModelId);
             if (carModel == null)
             {
                 model.Brands = await _context.Brands.ToListAsync();
                 model.CarModels = await _context.CarModels.ToListAsync();
+                model.Repairs = await _context.Repairs.ToListAsync();
                 return View("AddCar", model);
             }
 
+            // Check if the selected Brand exists
             var brand = await _context.Brands.FirstOrDefaultAsync(b => b.Id == model.BrandId);
             if (brand == null)
             {
                 model.Brands = await _context.Brands.ToListAsync();
                 model.CarModels = await _context.CarModels.ToListAsync();
+                model.Repairs = await _context.Repairs.ToListAsync();
                 return View("AddCar", model);
             }
 
+            // Check if a car with the same Brand, Model, and Year already exists
+            var existingCar = await _context.Cars
+                .Include(c => c.Brand)
+                .Include(c => c.CarModel)
+                .FirstOrDefaultAsync(c => c.BrandId == model.BrandId && c.CarModelId == model.CarModelId && c.Year == model.Year);
+
+            if (existingCar != null)
+            {
+                ModelState.AddModelError(string.Empty, "A car with the same brand, model, and year already exists.");
+                model.Brands = await _context.Brands.ToListAsync();
+                model.CarModels = await _context.CarModels.ToListAsync();
+                model.Repairs = await _context.Repairs.ToListAsync();
+                return View("AddCar", model);
+            }
+
+            // Create a new car object and populate it (without SalePrice)
             var newCar = new Car
             {
                 Brand = brand,
                 CarModel = carModel,
                 Year = model.Year,
-                Repairs = model.Repairs,
-                SalePrice = model.SalePrice,
+                PurchasePrice = model.PurchasePrice,  // Use the PurchasePrice entered in the form
                 UrlPhoto = model.UrlPhoto,
-                PurchasePrice = 0,
-                Finition = "Standard",
-                AvailableDate = DateTime.Now,
-                PurchaseDate = DateTime.MinValue,
-                SaleDate = DateTime.Now
+                AvailableDate = model.AvailableDate,
+                Finition = model.Finition,
+                Repairs = new List<Repair>()  // Initialize the Repairs collection
             };
 
+            // Add the car to the database
             _context.Cars.Add(newCar);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();  // Save the car to get its Id
 
-            return RedirectToAction("CarDetails", new { id = newCar.Id });
+            // Now that the car has been saved, associate repairs with the new car
+            if (model.Repairs != null && model.Repairs.Any())
+            {
+                foreach (var repair in model.Repairs)
+                {
+                    repair.CarId = newCar.Id;  // Set the CarId for each repair
+                    _context.Repairs.Add(repair);  // Add repairs to the context
+                }
+            }
+
+            // Save repairs to the database
+            await _context.SaveChangesAsync();  // Save both the new car and repairs
+
+            // Calculate SalePrice (PurchasePrice + total repair price + 500)
+            decimal totalRepairPrice = newCar.Repairs?.Sum(r => r.Price) ?? 0;
+            decimal salePrice = newCar.PurchasePrice + totalRepairPrice + 500;
+
+            // Update the SalePrice of the car
+            newCar.SalePrice = salePrice;
+            _context.Cars.Update(newCar);  // Update the car with the SalePrice
+            await _context.SaveChangesAsync();  // Save the updated car
+
+            // Redirect to the car details page after successfully adding the car
+            return RedirectToAction("CarDetails", "CarList", new { id = newCar.Id });
         }
+
 
         /// <summary>
         /// Add a new brand.
         /// </summary>
         [HttpPost]
-        public IActionResult AddBrand([FromBody] AddBrandViewModel model)
+        public async Task<IActionResult> AddBrand([FromBody] AddBrandViewModel model)
         {
             if (_context.Brands.Any(b => b.Name == model.BrandName))
             {
@@ -128,16 +166,19 @@ namespace project_5.Controllers
 
             var brand = new Brand { Name = model.BrandName };
             _context.Brands.Add(brand);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            return Ok(new { id = brand.Id, name = brand.Name });
+            // Return the updated list of brands to update the dropdown dynamically
+            var brands = await _context.Brands.ToListAsync();
+            return Json(new { success = true, brands = brands });
         }
+
 
         /// <summary>
         /// Add a new car model.
         /// </summary>
         [HttpPost]
-        public IActionResult AddCarModel([FromBody] AddCarModelViewModel model)
+        public async Task<IActionResult> AddCarModel([FromBody] AddCarModelViewModel model)
         {
             if (_context.CarModels.Any(m => m.Model == model.ModelName))
             {
@@ -146,10 +187,13 @@ namespace project_5.Controllers
 
             var carModel = new CarModel { Model = model.ModelName };
             _context.CarModels.Add(carModel);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            return Ok(new { id = carModel.Id, name = carModel.Model });
+            // Return the updated list of car models to update the dropdown dynamically
+            var carModels = await _context.CarModels.ToListAsync();
+            return Json(new { success = true, carModels = carModels });
         }
+
 
         /// <summary>
         /// delete a car.

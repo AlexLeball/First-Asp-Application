@@ -45,10 +45,22 @@
         <span class="text-danger" asp-validation-for="Year"></span>
     </div>
 
+   <div class="form-group mt-3">
+       <label for="finition">Finition</label>
+        <input type="text" id="finition" name="Finition" class="form-control" required />
+        <span class="text-danger" asp-validation-for="Finition"></span>
+    </div>
+
     <div class="form-group mt-3">
-        <label for="salePrice">Sale Price</label>
-        <input type="number" id="salePrice" name="SalePrice" class="form-control" required />
-        <span class="text-danger" asp-validation-for="SalePrice"></span>
+        <label for="purchasePrice">Purchase Price</label>
+        <input type="number" id="purchasePrice" name="PurchasePrice" class="form-control" required />
+        <span class="text-danger" asp-validation-for="PurchasePrice"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <label for="availableDate">Available Date</label>
+        <input type="date" id="availableDate" name="AvailableDate" class="form-control" required />
+        <span class="text-danger" asp-validation-for="AvailableDate"></span>
     </div>
 
     <div class="form-group mt-3">
@@ -57,10 +69,24 @@
         <span class="text-danger" asp-validation-for="UrlPhoto"></span>
     </div>
 
+    <!-- Repair Information Section -->
+    <div class="form-group mt-4">
+        <h4>Repairs</h4>
+        <label for="repairPrice">Repair Price</label>
+        <input type="number" id="repairPrice" name="Repairs[0].Price" class="form-control" />
+        <span class="text-danger" asp-validation-for="Repairs[0].Price"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <label for="repairDescription">Repair Description</label>
+        <textarea id="repairDescription" name="Repairs[0].Description" class="form-control"></textarea>
+        <span class="text-danger" asp-validation-for="Repairs[0].Description"></span>
+    </div>
+
+    <button type="button" class="btn btn-secondary mt-3" onclick="addRepair()">Add Another Repair</button>
 
     <button type="submit" class="btn btn-primary mt-3">Add Car</button>
 </form>
-
 
 <!-- Modal for Adding a New Brand -->
 <div class="modal fade" id="addBrandModal" tabindex="-1" aria-labelledby="addBrandModalLabel" aria-hidden="true">
@@ -102,80 +128,90 @@
     </div>
 </div>
 
-<!-- Return addCar method on submit -->
-
-
-
 <script>
-    function addBrand() {
-        var brandName = document.getElementById("newBrandName").value.trim();
-        var errorMessage = document.getElementById("brandErrorMessage");
+    var repairCount = 1;
 
+    function addRepair() {
+        var repairSection = document.createElement('div');
+        repairSection.innerHTML = `
+            <div class="form-group mt-4">
+                <label for="repairPrice">Repair Price</label>
+                <input type="number" id="repairPrice" name="Repairs[${repairCount}].Price" class="form-control" />
+                <span class="text-danger" asp-validation-for="Repairs[${repairCount}].Price"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label for="repairDescription">Repair Description</label>
+                <textarea id="repairDescription" name="Repairs[${repairCount}].Description" class="form-control"></textarea>
+                <span class="text-danger" asp-validation-for="Repairs[${repairCount}].Description"></span>
+            </div>
+        `;
+        var form = document.querySelector("form");
+        form.insertBefore(repairSection, form.querySelector("button[type='submit']"));
+        repairCount++;
+    }
+
+    function addBrand() {
+        var brandName = document.getElementById('newBrandName').value;
         if (!brandName) {
-            errorMessage.textContent = "Brand name cannot be empty.";
+            document.getElementById('brandErrorMessage').innerText = "Please enter a brand name.";
             return;
         }
 
         fetch('/CarList/AddBrand', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ brandName: brandName })
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ BrandName: brandName }),
         })
-            .then(response => {
-                if (response.ok) return response.json();
-                if (response.status === 409) throw new Error("Brand already exists.");
-                throw new Error("An error occurred.");
-            })
-            .then(data => {
-                var dropdown = document.getElementById("brandDropdown");
-                var option = document.createElement("option");
-                option.value = data.id;
-                option.textContent = data.name;
-                dropdown.appendChild(option);
-                dropdown.value = data.id;
-
-                errorMessage.textContent = "";
-                document.getElementById("newBrandName").value = "";
-                new bootstrap.Modal(document.getElementById('addBrandModal')).hide();
-            })
-            .catch(error => {
-                errorMessage.textContent = error.message;
-            });
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                var brandDropdown = document.getElementById('brandDropdown');
+                brandDropdown.innerHTML = '<option value="">Select a brand</option>';
+                data.brands.forEach(function(brand) {
+                    var option = document.createElement("option");
+                    option.value = brand.id;
+                    option.text = brand.name;
+                    brandDropdown.appendChild(option);
+                });
+                $('#addBrandModal').modal('hide');
+            } else {
+                document.getElementById('brandErrorMessage').innerText = data.message;
+            }
+        });
     }
 
     function addCarModel() {
-        var carModelName = document.getElementById("newCarModelName").value.trim();
-        var errorMessage = document.getElementById("carModelErrorMessage");
-
-        if (!carModelName) {
-            errorMessage.textContent = "Model name cannot be empty.";
+        var modelName = document.getElementById('newCarModelName').value;
+        if (!modelName) {
+            document.getElementById('carModelErrorMessage').innerText = "Please enter a model name.";
             return;
         }
 
         fetch('/CarList/AddCarModel', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ modelName: carModelName })
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ ModelName: modelName }),
         })
-            .then(response => {
-                if (response.ok) return response.json();
-                if (response.status === 409) throw new Error("Model already exists.");
-                throw new Error("An error occurred.");
-            })
-            .then(data => {
-                var dropdown = document.getElementById("carModelDropdown");
-                var option = document.createElement("option");
-                option.value = data.id;
-                option.textContent = data.name;
-                dropdown.appendChild(option);
-                dropdown.value = data.id;
-
-                errorMessage.textContent = "";
-                document.getElementById("newCarModelName").value = "";
-                new bootstrap.Modal(document.getElementById('addCarModelModal')).hide();
-            })
-            .catch(error => {
-                errorMessage.textContent = error.message;
-            });
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                var carModelDropdown = document.getElementById('carModelDropdown');
+                carModelDropdown.innerHTML = '<option value="">Select a model</option>';
+                data.carModels.forEach(function(carModel) {
+                    var option = document.createElement("option");
+                    option.value = carModel.id;
+                    option.text = carModel.model;
+                    carModelDropdown.appendChild(option);
+                });
+                $('#addCarModelModal').modal('hide');
+            } else {
+                document.getElementById('carModelErrorMessage').innerText = data.message;
+            }
+        });
     }
 </script>

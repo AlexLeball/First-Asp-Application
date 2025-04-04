@@ -2,7 +2,6 @@
 
 namespace project_5.Models.Entities
 {
-
     public class Car
     {
         public int Id { get; set; }
@@ -10,8 +9,8 @@ namespace project_5.Models.Entities
         public required string Finition { get; set; }
         public required string UrlPhoto { get; set; }
         public DateTime AvailableDate { get; set; }
-        public DateTime PurchaseDate { get; set; }
-        public DateTime SaleDate { get; set; }
+        public DateTime? PurchaseDate { get; set; }
+        public DateTime? SaleDate { get; set; }
         public decimal SalePrice { get; set; }
         public decimal PurchasePrice { get; set; }
         //has a navigation property to the Repair table
@@ -22,6 +21,7 @@ namespace project_5.Models.Entities
         public required virtual Brand Brand { get; set; }
         public int BrandId { get; set; }
         public int CarModelId { get; set; }
+        public bool IsSold => SaleDate.HasValue && SaleDate.Value <= DateTime.Now;
     }
 }
 
