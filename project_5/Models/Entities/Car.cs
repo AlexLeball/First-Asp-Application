@@ -2,7 +2,7 @@
 
 namespace project_5.Models.Entities
 {
-    
+
     public class Car
     {
         public int Id { get; set; }

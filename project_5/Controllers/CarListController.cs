@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using project_5.Data;
-using project_5.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
-using project_5.Models.ViewModels;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using project_5.Models.Entities;
+using project_5.Models.ViewModels;
 
 namespace project_5.Controllers
 {
@@ -99,6 +99,7 @@ namespace project_5.Controllers
                 Brand = brand,
                 CarModel = carModel,
                 Year = model.Year,
+                Repairs = model.Repairs,
                 SalePrice = model.SalePrice,
                 UrlPhoto = model.UrlPhoto,
                 PurchasePrice = 0,
@@ -107,7 +108,6 @@ namespace project_5.Controllers
                 PurchaseDate = DateTime.MinValue,
                 SaleDate = DateTime.Now
             };
-
 
             _context.Cars.Add(newCar);
             await _context.SaveChangesAsync();
