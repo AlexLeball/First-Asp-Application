@@ -245,6 +245,18 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
+      "Id": "C:\\Users\\alexa\\source\\project_5\\project_5\\wwwroot\\uploads\\016c5282-1254-4398-8535-e1f6bf53e681.png",
+      "PackagePath": "staticwebassets\\uploads\\016c5282-1254-4398-8535-e1f6bf53e681.png"
+    },
+    {
+      "Id": "C:\\Users\\alexa\\source\\project_5\\project_5\\wwwroot\\uploads\\6d3dcd75-cff4-4868-89ba-a1c5197a1c41.png",
+      "PackagePath": "staticwebassets\\uploads\\6d3dcd75-cff4-4868-89ba-a1c5197a1c41.png"
+    },
+    {
+      "Id": "C:\\Users\\alexa\\source\\project_5\\project_5\\wwwroot\\uploads\\d499b9fb-18bd-4c49-a7d7-b7a785c8a09d.png",
+      "PackagePath": "staticwebassets\\uploads\\d499b9fb-18bd-4c49-a7d7-b7a785c8a09d.png"
+    },
+    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.project_5.props",
       "PackagePath": "build\\project_5.props"
     },

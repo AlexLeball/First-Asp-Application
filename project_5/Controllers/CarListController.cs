@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using project_5.Models.Entities;
 using project_5.Models.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 
 namespace project_5.Controllers
 {
@@ -16,11 +17,13 @@ namespace project_5.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<CarListController> _logger;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public CarListController(ApplicationDbContext context, ILogger<CarListController> logger)
+        public CarListController(ApplicationDbContext context, ILogger<CarListController> logger, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         /// <summary>
@@ -70,6 +73,7 @@ namespace project_5.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddCar(AddCarViewModel model)
@@ -81,7 +85,7 @@ namespace project_5.Controllers
                 model.Brands = await _context.Brands.ToListAsync();
                 model.CarModels = await _context.CarModels.ToListAsync();
                 model.Repairs = await _context.Repairs.ToListAsync();
-                return View("AddCar", model);
+                return View("AddCarForm", model);
             }
 
             // Check if the selected Brand exists
@@ -91,7 +95,7 @@ namespace project_5.Controllers
                 model.Brands = await _context.Brands.ToListAsync();
                 model.CarModels = await _context.CarModels.ToListAsync();
                 model.Repairs = await _context.Repairs.ToListAsync();
-                return View("AddCar", model);
+                return View("AddCarForm", model);
             }
 
             // Check if a car with the same Brand, Model, and Year already exists
@@ -106,8 +110,41 @@ namespace project_5.Controllers
                 model.Brands = await _context.Brands.ToListAsync();
                 model.CarModels = await _context.CarModels.ToListAsync();
                 model.Repairs = await _context.Repairs.ToListAsync();
-                return View("AddCar", model);
+                return View("AddCarForm", model);
             }
+
+            if (model.CarPhotoFile != null && model.CarPhotoFile.Length > 0)
+            {
+                // Generate a unique filename
+                var fileExtension = Path.GetExtension(model.CarPhotoFile.FileName);
+                var fileName = Guid.NewGuid().ToString() + fileExtension;
+
+                // Define the path where you want to store the image
+                var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+
+                // Ensure directory exists
+                if (!Directory.Exists(uploadPath))
+                {
+                    Directory.CreateDirectory(uploadPath);
+                }
+
+                // Combine the upload path with the file name
+                var filePath = Path.Combine(uploadPath, fileName);
+
+                // Save the file
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.CarPhotoFile.CopyToAsync(stream);
+                }
+
+                // Store the relative path to the database
+                model.UrlPhoto = "/uploads/" + fileName; // This will be stored in the database
+            }
+            else
+            {
+                ModelState.AddModelError("CarPhotoFile", "Please upload a car photo.");
+            }
+
 
             // Create a new car object and populate it (without SalePrice)
             var newCar = new Car
@@ -305,6 +342,21 @@ namespace project_5.Controllers
             return RedirectToAction("CarDetails", new { id = car.Id });
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> MarkCarAsSold(int Id, DateTime SaleDate)
+        {
+            var car = await _context.Cars.FindAsync(Id);
+            if (car == null)
+            {
+                return NotFound();
+            }
+
+            car.SaleDate = SaleDate;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("CarDetails", new { id = Id });
+        }
 
     }
 }

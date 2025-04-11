@@ -1,32 +1,35 @@
 ﻿@using project_5.Models.Entities
 @model List<Car>
 
+
+
 @{
-    ViewData["Title"] = "Car Show";
+    ViewData["Title"] = "Nos Voitures";
 }
 
-<h1>Our Cars</h1>
+<div class="centered-container">
 
-<!-- Display a list of cars -->
+    <h1 class="page-title">Nos Voitures</h1>
 
-<ul>
-    @foreach (var car in Model)
+    @if (User.IsInRole("Admin"))
     {
-        <li>
-            <!-- Make each car clickable by wrapping it in an anchor tag -->
-            <a href="@Url.Action("CarDetails", "CarList", new { id = car.Id })">
-                <strong>@car.Brand.Name - @car.CarModel.Model</strong> (@car.Year)
-                <br>
-                <img src="@car.UrlPhoto" alt="Car Image" width="200" />
-                <p>Finition: @car.Finition</p>
-            </a>
-        </li>
+        <a class="btn btn-custom" href="@Url.Action("AddCarForm", "CarList")"> + Ajouter une Voiture</a>
     }
-</ul>
 
-<!-- Add a link to the AddCar action method for admins-->
-
-@if (User.IsInRole("Admin"))
-{
-    <a href="@Url.Action("AddCarForm", "CarList")">Add a new car</a>
-}
+    <div class="car-grid">
+        @foreach (var car in Model)
+        {
+            <div class="car-item">
+                <a href="@Url.Action("CarDetails", "CarList", new { id = car.Id })">
+                    <div class="car-content">
+                        <img src="@car.UrlPhoto" alt="Car Image" />
+                        <div class="car-info">
+                            <strong>@car.Brand.Name - @car.CarModel.Model</strong> (@car.Year)
+                            <p>Finition: @car.Finition</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>

@@ -18,9 +18,16 @@
         </select>
     </div>
 
-    <div class="form-group">
-        <label for="Year">Year</label>
-        <input asp-for="Year" class="form-control" type="number" />
+    <div class="form-group mt-3">
+        <label for="year">Year</label>
+        <select id="year" name="Year" class="form-control" required>
+            <option value="">Select a year</option>
+            @for (int i = DateTime.Now.Year; i >= 1990; i--)
+            {
+                <option value="@i">@i</option>
+            }
+        </select>
+        <span class="text-danger" asp-validation-for="Year"></span>
     </div>
 
     <div class="form-group">

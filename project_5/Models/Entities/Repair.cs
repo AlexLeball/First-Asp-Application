@@ -5,10 +5,10 @@ namespace project_5.Models.Entities
     public class Repair
     {
         public int Id { get; set; }
-        public required int Price { get; set; }
+        public int? Price { get; set; }
         public int CarId { get; set; }
         public Car? Car { get; set; }
-        public required string Description { get; set; }
+        public string? Description { get; set; }
 
     }
 }

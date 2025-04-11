@@ -21,7 +21,6 @@ namespace project_5.Models.Entities
         public required virtual Brand Brand { get; set; }
         public int BrandId { get; set; }
         public int CarModelId { get; set; }
-        public bool IsSold => SaleDate.HasValue && SaleDate.Value <= DateTime.Now;
     }
 }
 

@@ -1,7 +1,7 @@
 ﻿@using project_5.Models.ViewModels
 @model AddCarViewModel
 
-<form asp-controller="CarList" asp-action="AddCar" method="post">
+<form asp-controller="CarList" asp-action="AddCar" method="post" enctype="multipart/form-data">
     <!-- Brand Selection -->
     <div class="form-group">
         <label for="brandDropdown">Brand</label>
@@ -41,12 +41,18 @@
     <!-- Other Car Information -->
     <div class="form-group mt-3">
         <label for="year">Year</label>
-        <input type="number" id="year" name="Year" class="form-control" required />
+        <select id="year" name="Year" class="form-control" required>
+            <option value="">Select a year</option>
+            @for (int i = DateTime.Now.Year; i >= 1990; i--)
+            {
+                <option value="@i">@i</option>
+            }
+        </select>
         <span class="text-danger" asp-validation-for="Year"></span>
     </div>
 
-   <div class="form-group mt-3">
-       <label for="finition">Finition</label>
+    <div class="form-group mt-3">
+        <label for="finition">Finition</label>
         <input type="text" id="finition" name="Finition" class="form-control" required />
         <span class="text-danger" asp-validation-for="Finition"></span>
     </div>
@@ -58,15 +64,15 @@
     </div>
 
     <div class="form-group mt-3">
-        <label for="availableDate">Available Date</label>
+        <label for="availableDate">Available From</label>
         <input type="date" id="availableDate" name="AvailableDate" class="form-control" required />
         <span class="text-danger" asp-validation-for="AvailableDate"></span>
     </div>
 
     <div class="form-group mt-3">
-        <label for="UrlPhoto">Car Photo</label>
-        <input type="url" id="UrlPhoto" name="UrlPhoto" class="form-control" required />
-        <span class="text-danger" asp-validation-for="UrlPhoto"></span>
+        <label for="CarPhotoFile">Car Photo</label>
+        <input type="file" id="CarPhotoFile" name="CarPhotoFile" class="form-control" />
+        <span class="text-danger" asp-validation-for="CarPhotoFile"></span>
     </div>
 
     <!-- Repair Information Section -->
@@ -86,7 +92,6 @@
     <button type="button" class="btn btn-secondary mt-3" onclick="addRepair()">Add Another Repair</button>
 
     <button type="submit" class="btn btn-primary mt-3">Add Car</button>
-</form>
 
 <!-- Modal for Adding a New Brand -->
 <div class="modal fade" id="addBrandModal" tabindex="-1" aria-labelledby="addBrandModalLabel" aria-hidden="true">
@@ -127,6 +132,10 @@
         </div>
     </div>
 </div>
+
+</form>
+
+
 
 <script>
     var repairCount = 1;
