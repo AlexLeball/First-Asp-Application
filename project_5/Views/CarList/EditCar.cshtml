@@ -3,7 +3,8 @@
 
 <h1>Edit Car</h1>
 
-<form asp-action="EditCar" method="post">
+<form asp-action="EditCar" method="post" enctype="multipart/form-data">
+
     <div class="form-group">
         <label for="BrandId">Select Brand</label>
         <select asp-for="BrandId" class="form-control" asp-items="@(new SelectList(Model.Brands, "Id", "Name"))">
@@ -35,9 +36,19 @@
         <input asp-for="SalePrice" class="form-control" type="number" step="0.01" />
     </div>
 
-    <div class="form-group">
-        <label for="UrlPhoto">Photo URL</label>
-        <input asp-for="UrlPhoto" class="form-control" type="text" />
+    @if (!string.IsNullOrEmpty(Model.UrlPhoto))
+    {
+        <div class="mb-3">
+            <label>Photo actuelle :</label><br />
+            <img src="@Model.UrlPhoto" alt="Photo actuelle" class="img-thumbnail" style="max-height:200px;" />
+        </div>
+    }
+
+
+    <div class="form-group mt-3">
+        <label for="CarPhotoFile">Photo de la voiture (facultative)</label>
+        <input type="file" id="CarPhotoFile" name="CarPhotoFile" class="form-control" />
+        <span class="text-danger" asp-validation-for="CarPhotoFile"></span>
     </div>
 
     <div class="form-group">
@@ -45,6 +56,6 @@
         <input asp-for="Finition" class="form-control" type="text" />
     </div>
 
-    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <button type="submit" class="btn btn-custom-back">Save Changes</button>
 </form>
 

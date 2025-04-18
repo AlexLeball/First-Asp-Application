@@ -34,6 +34,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyTGlzdFxBZGRDYXJGb3JtLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/alexa/source/project_5/project_5/Views/CarList/CarAdded.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyTGlzdFxDYXJBZGRlZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/alexa/source/project_5/project_5/Views/CarList/CarDeleted.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyTGlzdFxDYXJEZWxldGVkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/alexa/source/project_5/project_5/Views/CarList/CarDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyTGlzdFxDYXJEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

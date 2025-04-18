@@ -13,7 +13,7 @@
 
     @if (User.IsInRole("Admin"))
     {
-        <a class="btn btn-custom" href="@Url.Action("AddCarForm", "CarList")"> + Ajouter une Voiture</a>
+        <a class="btn btn-custom-back" href="@Url.Action("AddCarForm", "CarList")"> + Ajouter une Voiture</a>
     }
 
     <div class="car-grid">
@@ -24,8 +24,11 @@
                     <div class="car-content">
                         <img src="@car.UrlPhoto" alt="Car Image" />
                         <div class="car-info">
-                            <strong>@car.Brand.Name - @car.CarModel.Model</strong> (@car.Year)
-                            <p>Finition: @car.Finition</p>
+                           <h5>Prix de vente @car.SalePrice</h5>
+                            <p>Année @car.Year</p>
+                            <p>Marque @car.Brand.Name </p>
+                            <p>Modèle @car.CarModel.Model</p>
+                           <p>Finition: @car.Finition</p>
                         </div>
                     </div>
                 </a>

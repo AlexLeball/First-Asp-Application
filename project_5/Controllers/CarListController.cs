@@ -186,7 +186,7 @@ namespace project_5.Controllers
             await _context.SaveChangesAsync();  // Save the updated car
 
             // Redirect to the car details page after successfully adding the car
-            return RedirectToAction("CarDetails", "CarList", new { id = newCar.Id });
+            return RedirectToAction("CarAdded", "CarList");
         }
 
 
@@ -257,7 +257,7 @@ namespace project_5.Controllers
             await _context.SaveChangesAsync();
 
             // Rediriger vers la liste des voitures après la suppression
-            return RedirectToAction("Cars");
+            return RedirectToAction("CarDeleted", "CarList");
         }
 
         [HttpGet]
@@ -296,6 +296,7 @@ namespace project_5.Controllers
         /// <summary>
         /// Mettre à jour les informations d'une voiture.
         /// </summary>
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -303,17 +304,14 @@ namespace project_5.Controllers
         {
             _logger.LogInformation("EditCar POST request started for CarId: {CarId}", model.Id);
 
-            // Check if the model is valid
             if (!ModelState.IsValid)
             {
                 _logger.LogWarning("Model is invalid. Returning to the view.");
-                // Reload brands and car models in case of invalid form submission
                 model.Brands = await _context.Brands.ToListAsync();
                 model.CarModels = await _context.CarModels.ToListAsync();
                 return View(model);
             }
 
-            // Fetch the car from the database by its ID
             var car = await _context.Cars
                                     .Include(c => c.Brand)
                                     .Include(c => c.CarModel)
@@ -324,23 +322,37 @@ namespace project_5.Controllers
                 return NotFound();
             }
 
-            // Update the car with new values from the form
+            // Update editable fields (keep old values if unchanged)
             car.BrandId = model.BrandId;
             car.CarModelId = model.CarModelId;
             car.Year = model.Year;
             car.SalePrice = model.SalePrice;
-            car.UrlPhoto = model.UrlPhoto;
             car.Finition = model.Finition;
 
-            _logger.LogInformation("Updating Car with ID: {CarId}", model.Id);
-            _logger.LogInformation("Selected BrandId: {BrandId}, CarModelId: {CarModelId}", model.BrandId, model.CarModelId);
+            // Optional photo upload (same logic as AddCar)
+            if (model.CarPhotoFile != null && model.CarPhotoFile.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+                Directory.CreateDirectory(uploadsFolder);
+
+                var fileExtension = Path.GetExtension(model.CarPhotoFile.FileName);
+                var uniqueFileName = Guid.NewGuid().ToString() + fileExtension;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.CarPhotoFile.CopyToAsync(fileStream);
+                }
+
+                car.UrlPhoto = "/uploads/" + uniqueFileName;
+            }
 
             _context.Entry(car).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            // Redirect to the CarDetails page after update
             return RedirectToAction("CarDetails", new { id = car.Id });
         }
+
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
@@ -358,5 +370,15 @@ namespace project_5.Controllers
             return RedirectToAction("CarDetails", new { id = Id });
         }
 
+
+        public IActionResult CarAdded()
+        {
+            return View(); // Cela doit retourner la vue "CarAdded.cshtml"
+        }
+
+        public IActionResult CarDeleted()
+        {
+            return View(); // Cela doit retourner la vue "CarDeleted.cshtml"
+        }
     }
 }

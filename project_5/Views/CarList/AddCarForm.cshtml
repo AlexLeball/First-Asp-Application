@@ -2,47 +2,50 @@
 @model AddCarViewModel
 
 <form asp-controller="CarList" asp-action="AddCar" method="post" enctype="multipart/form-data">
-    <!-- Brand Selection -->
+
+    <h1 class="page-title">Ajouter une voiture</h1>
+
+    <!-- Sélection de la marque -->
     <div class="form-group">
-        <label for="brandDropdown">Brand</label>
+        <label for="brandDropdown">Marque</label>
         <div class="d-flex">
             <select id="brandDropdown" name="BrandId" class="form-control" required>
-                <option value="">Select a brand</option>
+                <option value="">-- Sélectionner une marque --</option>
                 @foreach (var brand in Model.Brands)
                 {
                     <option value="@brand.Id">@brand.Name</option>
                 }
             </select>
             <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#addBrandModal">
-                + New Brand
+                + Nouvelle marque
             </button>
         </div>
         <span class="text-danger" asp-validation-for="BrandId"></span>
     </div>
 
-    <!-- Car Model (Style) Selection -->
+    <!-- Sélection du modèle -->
     <div class="form-group mt-3">
-        <label for="carModelDropdown">Car Model (Style)</label>
+        <label for="carModelDropdown">Modèle</label>
         <div class="d-flex">
             <select id="carModelDropdown" name="CarModelId" class="form-control" required>
-                <option value="">Select a model</option>
+                <option value="">-- Sélectionner un modèle --</option>
                 @foreach (var carModel in Model.CarModels)
                 {
                     <option value="@carModel.Id">@carModel.Model</option>
                 }
             </select>
             <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#addCarModelModal">
-                + New Model
+                + Nouveau modèle
             </button>
         </div>
         <span class="text-danger" asp-validation-for="CarModelId"></span>
     </div>
 
-    <!-- Other Car Information -->
+    <!-- Informations supplémentaires -->
     <div class="form-group mt-3">
-        <label for="year">Year</label>
+        <label for="year">Année</label>
         <select id="year" name="Year" class="form-control" required>
-            <option value="">Select a year</option>
+            <option value="">-- Sélectionner une année --</option>
             @for (int i = DateTime.Now.Year; i >= 1990; i--)
             {
                 <option value="@i">@i</option>
@@ -58,83 +61,85 @@
     </div>
 
     <div class="form-group mt-3">
-        <label for="purchasePrice">Purchase Price</label>
+        <label for="purchasePrice">Prix d'achat</label>
         <input type="number" id="purchasePrice" name="PurchasePrice" class="form-control" required />
         <span class="text-danger" asp-validation-for="PurchasePrice"></span>
     </div>
 
     <div class="form-group mt-3">
-        <label for="availableDate">Available From</label>
+        <label for="availableDate">Disponible à partir du</label>
         <input type="date" id="availableDate" name="AvailableDate" class="form-control" required />
         <span class="text-danger" asp-validation-for="AvailableDate"></span>
     </div>
 
     <div class="form-group mt-3">
-        <label for="CarPhotoFile">Car Photo</label>
+        <label for="CarPhotoFile">Photo de la voiture</label>
         <input type="file" id="CarPhotoFile" name="CarPhotoFile" class="form-control" />
         <span class="text-danger" asp-validation-for="CarPhotoFile"></span>
     </div>
 
-    <!-- Repair Information Section -->
+    <!-- Section réparation -->
     <div class="form-group mt-4">
-        <h4>Repairs</h4>
-        <label for="repairPrice">Repair Price</label>
+        <h4>Réparations</h4>
+        <label for="repairPrice">Prix de la réparation</label>
         <input type="number" id="repairPrice" name="Repairs[0].Price" class="form-control" />
         <span class="text-danger" asp-validation-for="Repairs[0].Price"></span>
     </div>
 
     <div class="form-group mt-3">
-        <label for="repairDescription">Repair Description</label>
+        <label for="repairDescription">Description de la réparation</label>
         <textarea id="repairDescription" name="Repairs[0].Description" class="form-control"></textarea>
         <span class="text-danger" asp-validation-for="Repairs[0].Description"></span>
     </div>
 
-    <button type="button" class="btn btn-secondary mt-3" onclick="addRepair()">Add Another Repair</button>
+    <button type="button" class="btn btn-secondary mt-3" onclick="addRepair()">Ajouter une autre réparation</button>
 
-    <button type="submit" class="btn btn-primary mt-3">Add Car</button>
+    <button type="submit" class="btn btn-primary mt-3">Ajouter la voiture</button>
 
-<!-- Modal for Adding a New Brand -->
-<div class="modal fade" id="addBrandModal" tabindex="-1" aria-labelledby="addBrandModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add New Brand</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <input type="text" id="newBrandName" class="form-control" placeholder="Enter brand name" />
-                <span id="brandErrorMessage" class="text-danger"></span>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="addBrand()">Add Brand</button>
+    <!-- Modal : Ajouter une marque -->
+    <div class="modal fade" id="addBrandModal" tabindex="-1" aria-labelledby="addBrandModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ajouter une marque</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="newBrandName" class="form-control" placeholder="Nom de la marque" />
+                    <span id="brandErrorMessage" class="text-danger"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" onclick="addBrand()">Ajouter la marque</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal for Adding a New Car Model -->
-<div class="modal fade" id="addCarModelModal" tabindex="-1" aria-labelledby="addCarModelModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add New Car Model (Style)</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <input type="text" id="newCarModelName" class="form-control" placeholder="Enter model name" />
-                <span id="carModelErrorMessage" class="text-danger"></span>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="addCarModel()">Add Model</button>
+    <!-- Modal : Ajouter un modèle -->
+    <div class="modal fade" id="addCarModelModal" tabindex="-1" aria-labelledby="addCarModelModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ajouter un modèle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="newCarModelName" class="form-control" placeholder="Nom du modèle" />
+                    <span id="carModelErrorMessage" class="text-danger"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" onclick="addCarModel()">Ajouter le modèle</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- Container pour les réparations dynamiques -->
+    <div id="repairsContainer"></div>
 
 </form>
-
 
 
 <script>
@@ -142,23 +147,19 @@
 
     function addRepair() {
         var repairSection = document.createElement('div');
+        repairSection.classList.add('repair-entry');
         repairSection.innerHTML = `
-            <div class="form-group mt-4">
-                <label for="repairPrice">Repair Price</label>
-                <input type="number" id="repairPrice" name="Repairs[${repairCount}].Price" class="form-control" />
-                <span class="text-danger" asp-validation-for="Repairs[${repairCount}].Price"></span>
-            </div>
+            <label for="repairPrice_${repairCount}">Repair Price</label>
+            <input type="number" id="repairPrice_${repairCount}" name="Repairs[${repairCount}].Price" class="form-control" />
 
-            <div class="form-group mt-3">
-                <label for="repairDescription">Repair Description</label>
-                <textarea id="repairDescription" name="Repairs[${repairCount}].Description" class="form-control"></textarea>
-                <span class="text-danger" asp-validation-for="Repairs[${repairCount}].Description"></span>
-            </div>
+            <label for="repairDescription_${repairCount}" class="mt-3">Repair Description</label>
+            <textarea id="repairDescription_${repairCount}" name="Repairs[${repairCount}].Description" class="form-control"></textarea>
         `;
-        var form = document.querySelector("form");
-        form.insertBefore(repairSection, form.querySelector("button[type='submit']"));
+    
+        document.getElementById('repairsContainer').appendChild(repairSection);
         repairCount++;
     }
+
 
     function addBrand() {
         var brandName = document.getElementById('newBrandName').value;

@@ -3,30 +3,30 @@
     ViewData["Title"] = "Login";
 }
 
-@{
-    <h1>login</h1>
-}
-
-<h2 class="text-center">Login</h2>
+<h2 class="text-center">Se Connecter</h2>
 
 <div class="row justify-content-center">
     <div class="col-md-4">
         <form asp-action="Login" method="post">
             <div class="mb-3">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" placeholder="Enter your email" />
+                <label asp-for="Email" class="form-label">Addresse mail</label>
+                <input asp-for="Email" class="form-control" placeholder="Enrtrez votre addresse mail" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" />
+                <label asp-for="Password" class="form-label">Mot de passe</label>
+                <input asp-for="Password" type="password" class="form-control" placeholder="Enrtrez votre mot de passe" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
             <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="login-buttons">
+                <button type="submit" class="btn btn-custom">Se Connecter</button>
+                <span>ou</span>
+                <a class="btn btn-custom link-connect text-light" asp-controller="User" asp-action="Register">S'inscrire</a>
+            </div>
 
-            <button type="submit" class="btn btn-primary w-100">Login</button>
         </form>
     </div>
 </div>

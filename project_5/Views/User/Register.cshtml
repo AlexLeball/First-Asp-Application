@@ -1,41 +1,40 @@
 ﻿@model RegisterViewModel
 
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Créer un compte";
 }
 
-<h1>Register as a new user</h1>
 
 <div class="row justify-content-center">
     <div class="col-md-4">
         <form asp-action="Register" method="post">
             <div class="mb-3">
-                <label asp-for="Username" class="form-label"></label>
-                <input asp-for="Username" class="form-control" placeholder="Enter your name" />
+                <label asp-for="Username" class="form-label">Nom d'utilisateur</label>
+                <input asp-for="Username" class="form-control" placeholder="Entrez votre nom" />
                 <span asp-validation-for="Username" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" placeholder="Enter your email" />
+                <label asp-for="Email" class="form-label">Adresse mail</label>
+                <input asp-for="Email" class="form-control" placeholder="Entrez votre addresse mail" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" />
+                <label asp-for="Password" class="form-label">Mot de passe</label>
+                <input asp-for="Password" type="password" class="form-control" placeholder="Entrez votre mot de passe" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="ConfirmPassword" class="form-label"></label>
-                <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm your password" />
+                <label asp-for="ConfirmPassword" class="form-label">Confirmez le mot de passe</label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirmez votre mot de passe" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
 
             <div asp-validation-summary="All" class="text-danger"></div>
 
-            <button type="submit" class="btn btn-primary w-100">Register</button>
+            <button type="submit" class="btn btn-custom w-100">Register</button>
         </form>
     </div>
 </div>
