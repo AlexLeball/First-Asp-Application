@@ -1,8 +1,9 @@
 ﻿@using project_5.Models.ViewModels
 @model AddCarViewModel
 
-<form asp-controller="CarList" asp-action="AddCar" method="post" enctype="multipart/form-data">
 
+<form asp-controller="CarList" asp-action="AddCar" method="post" enctype="multipart/form-data">
+<div class="form-container">    
     <h1 class="page-title">Ajouter une voiture</h1>
 
     <!-- Sélection de la marque -->
@@ -92,9 +93,9 @@
         <span class="text-danger" asp-validation-for="Repairs[0].Description"></span>
     </div>
 
-    <button type="button" class="btn btn-secondary mt-3" onclick="addRepair()">Ajouter une autre réparation</button>
+    <button type="button" class="btn btn-custom mt-3" onclick="addRepair()">Ajouter une autre réparation</button>
 
-    <button type="submit" class="btn btn-primary mt-3">Ajouter la voiture</button>
+    <button type="submit" class="btn btn-custom mt-3">Ajouter la voiture</button>
 
     <!-- Modal : Ajouter une marque -->
     <div class="modal fade" id="addBrandModal" tabindex="-1" aria-labelledby="addBrandModalLabel" aria-hidden="true">
@@ -109,8 +110,8 @@
                     <span id="brandErrorMessage" class="text-danger"></span>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary" onclick="addBrand()">Ajouter la marque</button>
+                    <button type="button" class="btn btn-custom" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-custom" onclick="addBrand()">Ajouter la marque</button>
                 </div>
             </div>
         </div>
@@ -129,8 +130,8 @@
                     <span id="carModelErrorMessage" class="text-danger"></span>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary" onclick="addCarModel()">Ajouter le modèle</button>
+                    <button type="button" class="btn btn-custom" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-custom" onclick="addCarModel()">Ajouter le modèle</button>
                 </div>
             </div>
         </div>
@@ -138,7 +139,7 @@
 
     <!-- Container pour les réparations dynamiques -->
     <div id="repairsContainer"></div>
-
+</div>
 </form>
 
 

@@ -5,6 +5,7 @@
 
 <form asp-action="EditCar" method="post" enctype="multipart/form-data">
 
+<div class="form-container">
     <div class="form-group">
         <label for="BrandId">Select Brand</label>
         <select asp-for="BrandId" class="form-control" asp-items="@(new SelectList(Model.Brands, "Id", "Name"))">
@@ -57,5 +58,6 @@
     </div>
 
     <button type="submit" class="btn btn-custom-back">Save Changes</button>
+</div>
 </form>
 

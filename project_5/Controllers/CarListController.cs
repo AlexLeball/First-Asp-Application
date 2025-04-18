@@ -373,12 +373,12 @@ namespace project_5.Controllers
 
         public IActionResult CarAdded()
         {
-            return View(); // Cela doit retourner la vue "CarAdded.cshtml"
+            return View("CarAdded", "CarList"); // Cela doit retourner la vue "CarAdded.cshtml"
         }
 
         public IActionResult CarDeleted()
         {
-            return View(); // Cela doit retourner la vue "CarDeleted.cshtml"
+            return View("CarDeleted", "CarList"); // Cela doit retourner la vue "CarDeleted.cshtml"
         }
     }
 }

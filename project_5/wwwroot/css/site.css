@@ -211,5 +211,6 @@ h1 {
     align-items: center;
 }
 
-.btn
-
+.add-or-delete {
+    margin: 250px;
+}
