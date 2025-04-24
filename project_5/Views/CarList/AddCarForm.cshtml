@@ -93,9 +93,11 @@
         <span class="text-danger" asp-validation-for="Repairs[0].Description"></span>
     </div>
 
-    <button type="button" class="btn btn-custom mt-3" onclick="addRepair()">Ajouter une autre réparation</button>
+    <div class="btn-custom-add-space">
+        <button type="button" class="btn btn-custom-add mt-3" onclick="addRepair()">Ajouter une autre réparation</button>
 
-    <button type="submit" class="btn btn-custom mt-3">Ajouter la voiture</button>
+        <button type="submit" class="btn btn-custom-add mt-3">Ajouter la voiture</button>
+    </div>
 
     <!-- Modal : Ajouter une marque -->
     <div class="modal fade" id="addBrandModal" tabindex="-1" aria-labelledby="addBrandModalLabel" aria-hidden="true">

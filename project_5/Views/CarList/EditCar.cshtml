@@ -1,39 +1,47 @@
 ﻿@using project_5.Models.ViewModels
 @model EditCarViewModel
 
-<h1>Edit Car</h1>
+<h1>Modifier une voiture</h1>
 
 <form asp-action="EditCar" method="post" enctype="multipart/form-data">
 
 <div class="form-container">
     <div class="form-group">
-        <label for="BrandId">Select Brand</label>
+        <label for="BrandId">Marque</label>
         <select asp-for="BrandId" class="form-control" asp-items="@(new SelectList(Model.Brands, "Id", "Name"))">
-            <option value="">-- Select a Brand --</option>
+                <option value="">-- Sélectionner une marque --</option>
         </select>
     </div>
 
     <div class="form-group">
-        <label for="CarModelId">Select Car Model</label>
+            <label for="CarModelId">Modèle</label>
         <select asp-for="CarModelId" class="form-control" asp-items="@(new SelectList(Model.CarModels, "Id", "Model"))">
-            <option value="">-- Select a Model --</option>
+                <option value="">-- Sélectionner un modèle --</option>
         </select>
     </div>
 
     <div class="form-group mt-3">
-        <label for="year">Year</label>
+        <label for="year">Année</label>
         <select id="year" name="Year" class="form-control" required>
-            <option value="">Select a year</option>
+                <option value="">Sélectionner une année</option>
             @for (int i = DateTime.Now.Year; i >= 1990; i--)
             {
-                <option value="@i">@i</option>
+                    if (Model.Year == i)
+                    {
+                        <option value="@i" selected="selected">@i</option>
+                    }
+                    else
+                    {
+                        <option value="@i">@i</option>
+                    }
+
             }
         </select>
         <span class="text-danger" asp-validation-for="Year"></span>
     </div>
 
     <div class="form-group">
-        <label for="SalePrice">Sale Price</label>
+        <label for="SalePrice">Prix de vente</label>
         <input asp-for="SalePrice" class="form-control" type="number" step="0.01" />
     </div>
 
@@ -57,7 +65,7 @@
         <input asp-for="Finition" class="form-control" type="text" />
     </div>
 
-    <button type="submit" class="btn btn-custom-back">Save Changes</button>
+        <button type="submit" class="btn btn-custom-back">Enregistrer les modifications</button>
 </div>
 </form>
 
