@@ -94,7 +94,7 @@
     </div>
 
     <div class="btn-custom-add-space">
-        <button type="button" class="btn btn-custom-add mt-3" onclick="addRepair()">Ajouter une autre réparation</button>
+        <button type="button" class="btn btn-custom-add mt-3" onclick="addRepair()">Ajouter la réparation</button>
 
         <button type="submit" class="btn btn-custom-add mt-3">Ajouter la voiture</button>
     </div>
@@ -140,8 +140,12 @@
     </div>
 
     <!-- Container pour les réparations dynamiques -->
-    <div id="repairsContainer"></div>
-</div>
+        <div id="repairMessage" class="alert alert-success mt-3 d-none" role="alert">
+            Réparation ajoutée avec succès !
+        </div>
+
+        <div id="repairsContainer"></div>
+        </div>
 </form>
 
 
@@ -152,15 +156,25 @@
         var repairSection = document.createElement('div');
         repairSection.classList.add('repair-entry');
         repairSection.innerHTML = `
-            <label for="repairPrice_${repairCount}">Repair Price</label>
+            <label for="repairPrice_${repairCount}">Prix de la réparation</label>
             <input type="number" id="repairPrice_${repairCount}" name="Repairs[${repairCount}].Price" class="form-control" />
 
-            <label for="repairDescription_${repairCount}" class="mt-3">Repair Description</label>
+            <label for="repairDescription_${repairCount}" class="mt-3">Description de la réparation</label>
             <textarea id="repairDescription_${repairCount}" name="Repairs[${repairCount}].Description" class="form-control"></textarea>
         `;
-    
+
         document.getElementById('repairsContainer').appendChild(repairSection);
         repairCount++;
+
+        // Show success message
+        var messageEl = document.getElementById('repairMessage');
+        messageEl.classList.remove('d-none');
+        messageEl.textContent = "Réparation ajoutée avec succès !";
+
+        // Optionally hide after a few seconds
+        setTimeout(() => {
+            messageEl.classList.add('d-none');
+        }, 3000);
     }
 
 
