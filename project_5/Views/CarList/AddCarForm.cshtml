@@ -158,42 +158,67 @@
 </form>
 
 <script>
-      function addRepair() {
-        const type = document.getElementById('repairType').value.trim();
-        const cost = document.getElementById('repairCost').value.trim();
+    var repairCount = 1;
 
-        // Check for empty fields or invalid cost
-        if (!type || !cost || isNaN(cost)) {
-            document.getElementById('repairMessage').classList.add('d-none');
-            alert('Veuillez remplir tous les champs de réparation avec des valeurs valides.');
-            return;
+    function addRepair() {
+        // Get current values (first repair inputs)
+        const priceInput = document.getElementById('repairPrice');
+        const descInput = document.getElementById('repairDescription');
+        const price = priceInput?.value.trim();
+        const desc = descInput?.value.trim();
+
+        // Only proceed if either value is filled in
+        if (!price && !desc) {
+            return; // Do nothing if both are empty
         }
 
-        // Create repair item
-        const repairHTML = `<div>${type} - ${parseFloat(cost).toFixed(2)}€</div>`;
-        document.getElementById('repairsContainer').innerHTML += repairHTML;
+        // Create a new repair fieldset
+        var repairSection = document.createElement('fieldset');
+        repairSection.classList.add('form-group', 'mt-3');
+        repairSection.innerHTML = `
+            <legend class="h6">Réparation ${repairCount + 1}</legend>
+            <label for="repairPrice_${repairCount}">Prix de la réparation</label>
+            <input type="number" id="repairPrice_${repairCount}" name="Repairs[${repairCount}].Price" class="form-control" />
+
+            <label for="repairDescription_${repairCount}" class="mt-3">Description de la réparation</label>
+            <textarea id="repairDescription_${repairCount}" name="Repairs[${repairCount}].Description" class="form-control"></textarea>
+        `;
+        document.getElementById('repairsContainer').appendChild(repairSection);
+
+        repairCount++;
 
         // Show success message
-        const message = document.getElementById('repairMessage');
-        message.classList.remove('d-none');
+        const messageEl = document.getElementById('repairMessage');
+        messageEl.classList.remove('d-none');
+        messageEl.textContent = "Réparation ajoutée avec succès !";
 
-        // Auto-hide the success message after 3 seconds
         setTimeout(() => {
-            message.classList.add('d-none');
+            messageEl.classList.add('d-none');
         }, 3000);
 
-        // Clear inputs
-        document.getElementById('repairType').value = '';
-        document.getElementById('repairCost').value = '';
+      
     }
 
-
     function addBrand() {
-        var brandName = document.getElementById('newBrandName').value;
+        const brandName = document.getElementById('newBrandName').value.trim();
+        const brandError = document.getElementById('brandErrorMessage');
+
         if (!brandName) {
-            document.getElementById('brandErrorMessage').innerText = "Veuillez entrer un nom de marque.";
+            brandError.innerText = "Veuillez entrer un nom de marque.";
             return;
         }
+
+        // Check if the brand already exists in the dropdown
+        const brandDropdown = document.getElementById('brandDropdown');
+        const existingBrands = Array.from(brandDropdown.options).map(opt => opt.text.toLowerCase());
+
+        if (existingBrands.includes(brandName.toLowerCase())) {
+            brandError.innerText = "Cette marque existe déjà.";
+            return;
+        }
+
+        // If valid, clear error and continue to send to server
+        brandError.innerText = "";
 
         fetch('/CarList/AddBrand', {
             method: 'POST',
@@ -203,27 +228,40 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    var brandDropdown = document.getElementById('brandDropdown');
                     brandDropdown.innerHTML = '<option value="">-- Sélectionner une marque --</option>';
                     data.brands.forEach(brand => {
-                        var option = document.createElement("option");
+                        const option = document.createElement("option");
                         option.value = brand.id;
                         option.text = brand.name;
                         brandDropdown.appendChild(option);
                     });
                     $('#addBrandModal').modal('hide');
                 } else {
-                    document.getElementById('brandErrorMessage').innerText = data.message;
+                    brandError.innerText = data.message;
                 }
             });
     }
 
     function addCarModel() {
-        var modelName = document.getElementById('newCarModelName').value;
+        const modelName = document.getElementById('newCarModelName').value.trim();
+        const modelError = document.getElementById('carModelErrorMessage');
+
         if (!modelName) {
-            document.getElementById('carModelErrorMessage').innerText = "Veuillez entrer un nom de modèle.";
+            modelError.innerText = "Veuillez entrer un nom de modèle.";
             return;
         }
+
+        // Check if the model already exists in the dropdown
+        const carModelDropdown = document.getElementById('carModelDropdown');
+        const existingModels = Array.from(carModelDropdown.options).map(opt => opt.text.toLowerCase());
+
+        if (existingModels.includes(modelName.toLowerCase())) {
+            modelError.innerText = "Ce modèle existe déjà.";
+            return;
+        }
+
+        // If valid, clear error and send to server
+        modelError.innerText = "";
 
         fetch('/CarList/AddCarModel', {
             method: 'POST',
@@ -233,20 +271,20 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    var carModelDropdown = document.getElementById('carModelDropdown');
                     carModelDropdown.innerHTML = '<option value="">-- Sélectionner un modèle --</option>';
                     data.carModels.forEach(carModel => {
-                        var option = document.createElement("option");
+                        const option = document.createElement("option");
                         option.value = carModel.id;
                         option.text = carModel.model;
                         carModelDropdown.appendChild(option);
                     });
                     $('#addCarModelModal').modal('hide');
                 } else {
-                    document.getElementById('carModelErrorMessage').innerText = data.message;
+                    modelError.innerText = data.message;
                 }
             });
     }
+
     // Validate form before submission
     function validateForm() {
     const brand = document.getElementById('brandDropdown').value.trim();
