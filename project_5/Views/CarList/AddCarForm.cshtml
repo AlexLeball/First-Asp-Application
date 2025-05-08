@@ -109,7 +109,8 @@
 
         <div class="btn-custom-add-space">
             <button type="button" class="btn btn-custom-add mt-3" onclick="addRepair()">Ajouter la réparation</button>
-            <button type="submit" class="btn btn-custom-add mt-3">Ajouter la voiture</button>
+            <button type="submit" class="btn btn-custom-add mt-3" onclick="return validateForm()">Ajouter la voiture</button>
+
         </div>
 
         <!-- Modal : Ajouter une marque -->
@@ -157,31 +158,35 @@
 </form>
 
 <script>
-    var repairCount = 1;
+      function addRepair() {
+        const type = document.getElementById('repairType').value.trim();
+        const cost = document.getElementById('repairCost').value.trim();
 
-    function addRepair() {
-        var repairSection = document.createElement('fieldset');
-        repairSection.classList.add('form-group', 'mt-3');
-        repairSection.innerHTML = `
-                <legend class="h6">Réparation ${repairCount + 1}</legend>
-                <label for="repairPrice_${repairCount}">Prix de la réparation</label>
-                <input type="number" id="repairPrice_${repairCount}" name="Repairs[${repairCount}].Price" class="form-control" />
+        // Check for empty fields or invalid cost
+        if (!type || !cost || isNaN(cost)) {
+            document.getElementById('repairMessage').classList.add('d-none');
+            alert('Veuillez remplir tous les champs de réparation avec des valeurs valides.');
+            return;
+        }
 
-                <label for="repairDescription_${repairCount}" class="mt-3">Description de la réparation</label>
-                <textarea id="repairDescription_${repairCount}" name="Repairs[${repairCount}].Description" class="form-control"></textarea>
-            `;
-        document.getElementById('repairsContainer').appendChild(repairSection);
+        // Create repair item
+        const repairHTML = `<div>${type} - ${parseFloat(cost).toFixed(2)}€</div>`;
+        document.getElementById('repairsContainer').innerHTML += repairHTML;
 
-        repairCount++;
+        // Show success message
+        const message = document.getElementById('repairMessage');
+        message.classList.remove('d-none');
 
-        var messageEl = document.getElementById('repairMessage');
-        messageEl.classList.remove('d-none');
-        messageEl.textContent = "Réparation ajoutée avec succès !";
-
+        // Auto-hide the success message after 3 seconds
         setTimeout(() => {
-            messageEl.classList.add('d-none');
+            message.classList.add('d-none');
         }, 3000);
+
+        // Clear inputs
+        document.getElementById('repairType').value = '';
+        document.getElementById('repairCost').value = '';
     }
+
 
     function addBrand() {
         var brandName = document.getElementById('newBrandName').value;
@@ -242,4 +247,45 @@
                 }
             });
     }
+    // Validate form before submission
+    function validateForm() {
+    const brand = document.getElementById('brandDropdown').value.trim();
+    const model = document.getElementById('carModelDropdown').value.trim();
+    const year = document.getElementById('year').value.trim();
+    const finition = document.getElementById('finition').value.trim();
+    const purchasePrice = document.getElementById('purchasePrice').value.trim();
+    const availableDate = document.getElementById('availableDate').value.trim();
+    const fileInput = document.getElementById('CarPhotoFile');
+    const file = fileInput.files[0];
+
+    // Basic required field checks
+    if (!brand || !model || !year || !finition || !purchasePrice || !availableDate) {
+        alert("Veuillez remplir tous les champs obligatoires.");
+        return false;
+    }
+
+    // Photo is required
+    if (!file) {
+        alert("Veuillez sélectionner une photo de la voiture.");
+        return false;
+    }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png'];
+    if (!allowedTypes.includes(file.type)) {
+        alert("Format de fichier invalide. Veuillez choisir un fichier JPG ou PNG.");
+        return false;
+    }
+
+    // Optional: Validate repair if entered
+    const repairPrice = document.getElementById('repairPrice').value.trim();
+    const repairDesc = document.getElementById('repairDescription').value.trim();
+    if ((repairPrice && isNaN(repairPrice)) || (repairPrice && !repairDesc)) {
+        alert("Si une réparation est renseignée, assurez-vous que le prix est un nombre valide et que la description est fournie.");
+        return false;
+    }
+
+    return true; // Allow form submission
+}
+
 </script>

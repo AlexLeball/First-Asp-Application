@@ -1,85 +1,72 @@
 ﻿@using project_5.Models.Entities
 @model Car
-    
-<!-- Back to Cars -->
-<a asp-action="Cars" class="link-back">retour</a>
 
-<div class="admin-details">       
-    <!-- Admin Actions: Mark as Sold, Edit, Delete -->
+<a asp-action="Cars" class="link-back" aria-label="Retour à la liste des voitures">← Retour</a>
+
+<div class="admin-details">
     @if (User.IsInRole("Admin"))
-    {                  
-            <p>Vous avez publié cette announce, vous pouvez le: </p>
+    {
+        <p>Vous avez publié cette annonce, vous pouvez la :</p>
 
-            <div class="links">
-                <!-- Edit Car -->
-                <a asp-action="EditCar" asp-route-id="@Model.Id" class="link-modify">Modifier</a>
+        <div class="links" role="navigation" aria-label="Actions administrateur">
+            <a asp-action="EditCar" asp-route-id="@Model.Id" class="link-modify" aria-label="Modifier cette voiture">Modifier</a>
 
-                <!-- Delete Car -->
-                <form asp-action="DeleteCar" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Vous-etes sûr vous-voulez supprimer cette announce?');">
-                    <button type="submit" class="link-delete">Supprimer cette announce</button>
-                </form>
-            </div>
-
-            <!-- Mark as Sold Form -->
-            <div class="sold-form">
-
-                <form asp-action="MarkCarAsSold" method="post">
-                    <input type="hidden" name="Id" value="@Model.Id" />
-
-                    <div class="form-group">
-                        <label for="SaleDate">Ajouter la date de vente</label>
-                        <input name="SaleDate" class="form-control" type="date" required />
-                    </div>
-
-                    <button type="submit" class="btn btn-sale-date mt-2">Ajouter</button>
-                </form>
-            </div>
-
-    }
-
-</div>
-
-
-            
-<div class="container mt-4">
-    <div class="car-details-grid">
-          
-            <!-- Car Image -->
-        <div class="car-image">
-            <img src="@Model.UrlPhoto" alt="Car Photo" class="img-fluid rounded"  />
+            <form asp-action="DeleteCar"
+                  asp-route-id="@Model.Id"
+                  method="post"
+                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?');"
+                  aria-label="Supprimer cette voiture">
+                <button type="submit" class="link-delete">Supprimer cette annonce</button>
+            </form>
         </div>
 
-        <!-- Car Information -->
-        <div class="car-details-info">
-            <h2><strong>Prix de vente</strong> $@Model.SalePrice</h2>
-            <p><strong>Marque</strong> @Model.Brand.Name</p>
-            <p><strong>Modèle</strong> @Model.CarModel.Model</p>
-            <p><strong>Année</strong> @Model.Year</p>
-            <p><strong>Finition</strong> @Model.Finition</p>
-            <p><strong>Disponible le </strong> @Model.AvailableDate.ToString("yyyy-MM-dd")</p>
-            <p><strong>Date de vente</strong> @(Model.SaleDate?.ToString("yyyy-MM-dd") ?? "Not Sold")</p>
+        <!-- Mark as Sold Form -->
+        <div class="sold-form mt-3">
+            <form asp-action="MarkCarAsSold" method="post" aria-label="Formulaire de vente">
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <div class="form-group">
+                    <label for="SaleDate">Date de vente</label>
+                    <input id="SaleDate" name="SaleDate" class="form-control" type="date" required aria-required="true" />
+                </div>
+                <button type="submit" class="btn btn-sale-date mt-2">Ajouter</button>
+            </form>
+        </div>
+    }
+</div>
 
-            <!-- Car Status -->
+<div class="container mt-4" role="main">
+    <div class="car-details-grid">
+        <div class="car-image">
+            <img src="@Model.UrlPhoto" alt="Photo de la voiture" class="img-fluid rounded" />
+        </div>
+
+        <div class="car-details-info">
+            <h2><strong>Prix de vente :</strong> $@Model.SalePrice</h2>
+            <p><strong>Marque :</strong> @Model.Brand.Name</p>
+            <p><strong>Modèle :</strong> @Model.CarModel.Model</p>
+            <p><strong>Année :</strong> @Model.Year</p>
+            <p><strong>Finition :</strong> @Model.Finition</p>
+            <p><strong>Disponible le :</strong> @Model.AvailableDate.ToString("yyyy-MM-dd")</p>
+            <p><strong>Date de vente :</strong> @(Model.SaleDate?.ToString("yyyy-MM-dd") ?? "Non vendue")</p>
+
             <p>
-                <strong>Status:</strong>
+                <strong>Statut :</strong>
                 @if (Model.SaleDate.HasValue)
                 {
                     if (Model.SaleDate.Value > DateTime.Now)
                     {
-                                <span class="badge bg-warning">Reservé</span>
+                        <span class="badge bg-warning" aria-label="Statut: Réservée">Réservée</span>
                     }
                     else
                     {
-                                <span class="badge bg-danger">Vendu</span>
+                        <span class="badge bg-danger" aria-label="Statut: Vendue">Vendue</span>
                     }
                 }
                 else
                 {
-                        <span class="badge bg-success">Disponible</span>
+                    <span class="badge bg-success" aria-label="Statut: Disponible">Disponible</span>
                 }
             </p>
-
         </div>
     </div>
 </div>
-
