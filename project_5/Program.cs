@@ -69,7 +69,7 @@ async Task SeedRolesAndAdminAsync(IServiceProvider serviceProvider)
     string username = "Jacques";
     string adminRole = "Admin";
     string adminEmail = "jacques@example.com";
-    string adminPassword = "Password@123"; // Change for production
+    string adminPassword = "Password@123"; 
 
     // Create Admin role if it does not exist
     var roleExist = await roleManager.RoleExistsAsync(adminRole);
