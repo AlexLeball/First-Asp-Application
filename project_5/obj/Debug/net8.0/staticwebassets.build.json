@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "K6LoDt87xbgIv22cDtnLoUcShqOpCfZ4TyGDX5CqYvg=",
+  "Hash": "7vt72jwMf0X6C2Jy4X9DxwPa8Ti/0W4wn+2fCSs59vY=",
   "Source": "project_5",
   "BasePath": "_content/project_5",
   "Mode": "Default",
@@ -2449,6 +2449,25 @@
       "OriginalItemSpec": "wwwroot\\uploads\\2e82b212-7a4b-46ba-8297-2197efcb76cf.png"
     },
     {
+      "Identity": "C:\\Users\\alexa\\source\\project_5\\project_5\\wwwroot\\uploads\\396a6041-6852-439e-bd77-1bddcb4b7f05.png",
+      "SourceId": "project_5",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\alexa\\source\\project_5\\project_5\\wwwroot\\",
+      "BasePath": "_content/project_5",
+      "RelativePath": "uploads/396a6041-6852-439e-bd77-1bddcb4b7f05.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\396a6041-6852-439e-bd77-1bddcb4b7f05.png"
+    },
+    {
       "Identity": "C:\\Users\\alexa\\source\\project_5\\project_5\\wwwroot\\uploads\\56e1e4a1-be31-41b4-ae7e-4a355f6fc707.png",
       "SourceId": "project_5",
       "SourceType": "Discovered",
@@ -2582,6 +2601,25 @@
       "OriginalItemSpec": "wwwroot\\uploads\\a9bd509a-b6a3-4579-a41d-78245accda96.png"
     },
     {
+      "Identity": "C:\\Users\\alexa\\source\\project_5\\project_5\\wwwroot\\uploads\\af189389-db94-49b0-b0dc-7913b5b5c3eb.png",
+      "SourceId": "project_5",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\alexa\\source\\project_5\\project_5\\wwwroot\\",
+      "BasePath": "_content/project_5",
+      "RelativePath": "uploads/af189389-db94-49b0-b0dc-7913b5b5c3eb.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\af189389-db94-49b0-b0dc-7913b5b5c3eb.png"
+    },
+    {
       "Identity": "C:\\Users\\alexa\\source\\project_5\\project_5\\wwwroot\\uploads\\d499b9fb-18bd-4c49-a7d7-b7a785c8a09d.png",
       "SourceId": "project_5",
       "SourceType": "Discovered",
@@ -2618,6 +2656,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\f679f141-ee8e-4a0a-ba4a-c3b4b516d2e6.png"
+    },
+    {
+      "Identity": "C:\\Users\\alexa\\source\\project_5\\project_5\\wwwroot\\uploads\\f6cd0a49-8561-4d52-9a3d-a11cb20d5327.png",
+      "SourceId": "project_5",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\alexa\\source\\project_5\\project_5\\wwwroot\\",
+      "BasePath": "_content/project_5",
+      "RelativePath": "uploads/f6cd0a49-8561-4d52-9a3d-a11cb20d5327.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\f6cd0a49-8561-4d52-9a3d-a11cb20d5327.png"
     },
     {
       "Identity": "C:\\Users\\alexa\\source\\project_5\\project_5\\wwwroot\\uploads\\fa2dbb39-06af-496c-b916-162f95527893.png",

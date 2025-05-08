@@ -3,29 +3,43 @@
 
 <h1>Modifier une voiture</h1>
 
-<form asp-action="EditCar" method="post" enctype="multipart/form-data">
+<form asp-action="EditCar" method="post" enctype="multipart/form-data" aria-label="Formulaire de modification de voiture">
+    <div class="form-container">
 
-<div class="form-container">
-    <div class="form-group">
-        <label for="BrandId">Marque</label>
-        <select asp-for="BrandId" class="form-control" asp-items="@(new SelectList(Model.Brands, "Id", "Name"))">
+        <!-- Marque -->
+        <div class="form-group">
+            <label asp-for="BrandId" class="form-label">Marque</label>
+            <select asp-for="BrandId"
+                    class="form-control"
+                    asp-items="@(new SelectList(Model.Brands, "Id", "Name"))"
+                    aria-required="true"
+                    required>
                 <option value="">-- Sélectionner une marque --</option>
-        </select>
-    </div>
+            </select>
+            <span class="text-danger" asp-validation-for="BrandId" role="alert" aria-live="assertive"></span>
+        </div>
 
-    <div class="form-group">
-            <label for="CarModelId">Modèle</label>
-        <select asp-for="CarModelId" class="form-control" asp-items="@(new SelectList(Model.CarModels, "Id", "Model"))">
+        <!-- Modèle -->
+        <div class="form-group mt-3">
+            <label asp-for="CarModelId" class="form-label">Modèle</label>
+            <select asp-for="CarModelId"
+                    class="form-control"
+                    asp-items="@(new SelectList(Model.CarModels, "Id", "Model"))"
+                    aria-required="true"
+                    required>
                 <option value="">-- Sélectionner un modèle --</option>
-        </select>
-    </div>
+            </select>
+            <span class="text-danger" asp-validation-for="CarModelId" role="alert" aria-live="assertive"></span>
+        </div>
 
-    <div class="form-group mt-3">
-        <label for="year">Année</label>
-        <select id="year" name="Year" class="form-control" required>
+        <!-- Année -->
+        <div class="form-group mt-3">
+            <label for="year" class="form-label">Année</label>
+            <select id="year" name="Year" class="form-control" required aria-required="true">
                 <option value="">Sélectionner une année</option>
-            @for (int i = DateTime.Now.Year; i >= 1990; i--)
-            {
+                <option value="">Sélectionner une année</option>
+                @for (int i = DateTime.Now.Year; i >= 1990; i--)
+                {
                     if (Model.Year == i)
                     {
                         <option value="@i" selected="selected">@i</option>
@@ -35,37 +49,53 @@
                         <option value="@i">@i</option>
                     }
 
-            }
-        </select>
-        <span class="text-danger" asp-validation-for="Year"></span>
-    </div>
-
-    <div class="form-group">
-        <label for="SalePrice">Prix de vente</label>
-        <input asp-for="SalePrice" class="form-control" type="number" step="0.01" />
-    </div>
-
-    @if (!string.IsNullOrEmpty(Model.UrlPhoto))
-    {
-        <div class="mb-3">
-            <label>Photo actuelle :</label><br />
-            <img src="@Model.UrlPhoto" alt="Photo actuelle" class="img-thumbnail" style="max-height:200px;" />
+                }
+            </select>
+            <span class="text-danger" asp-validation-for="Year" role="alert" aria-live="assertive"></span>
         </div>
-    }
 
+        <!-- Prix de vente -->
+        <div class="form-group mt-3">
+            <label asp-for="SalePrice" class="form-label">Prix de vente</label>
+            <input asp-for="SalePrice" class="form-control" type="number" step="0.01" aria-describedby="salePriceDesc" />
+            <span id="salePriceDesc" class="form-text text-muted">Indiquez le prix en euros (€)</span>
+            <span class="text-danger" asp-validation-for="SalePrice" role="alert" aria-live="assertive"></span>
+        </div>
 
-    <div class="form-group mt-3">
-        <label for="CarPhotoFile">Photo de la voiture (facultative)</label>
-        <input type="file" id="CarPhotoFile" name="CarPhotoFile" class="form-control" />
-        <span class="text-danger" asp-validation-for="CarPhotoFile"></span>
+        <!-- Photo actuelle -->
+        @if (!string.IsNullOrEmpty(Model.UrlPhoto))
+        {
+            <div class="mb-3 mt-3">
+                <label class="form-label">Photo actuelle :</label><br />
+                <img src="@Model.UrlPhoto"
+                     alt="Photo actuelle de la voiture"
+                     class="img-thumbnail"
+                     style="max-height:200px;" />
+            </div>
+        }
+
+        <!-- Nouvelle photo -->
+        <div class="form-group mt-3">
+            <label for="CarPhotoFile" class="form-label">Photo de la voiture (facultative)</label>
+            <input type="file"
+                   id="CarPhotoFile"
+                   name="CarPhotoFile"
+                   class="form-control"
+                   aria-describedby="carPhotoHelp" />
+            <small id="carPhotoHelp" class="form-text text-muted">Format accepté : JPG, PNG.</small>
+            <span class="text-danger" asp-validation-for="CarPhotoFile" role="alert" aria-live="assertive"></span>
+        </div>
+
+        <!-- Finition -->
+        <div class="form-group mt-3">
+            <label asp-for="Finition" class="form-label">Finition</label>
+            <input asp-for="Finition" class="form-control" type="text" aria-required="true" required />
+            <span class="text-danger" asp-validation-for="Finition" role="alert" aria-live="assertive"></span>
+        </div>
+
+        <!-- Submit -->
+        <div class="form-group mt-4">
+            <button type="submit" class="btn btn-custom-back">Enregistrer les modifications</button>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label for="Finition">Finition</label>
-        <input asp-for="Finition" class="form-control" type="text" />
-    </div>
-
-        <button type="submit" class="btn btn-custom-back">Enregistrer les modifications</button>g
-</div>
 </form>
-

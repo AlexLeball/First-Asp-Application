@@ -4,37 +4,61 @@
     ViewData["Title"] = "Créer un compte";
 }
 
-
-<div class="row justify-content-center">
+<div class="row justify-content-center" role="form" aria-labelledby="register-title">
     <div class="col-md-4">
-        <form asp-action="Register" method="post">
+        <h1 id="register-title" class="mb-4 text-center">Créer un compte</h1>
+
+        <form asp-action="Register" method="post" aria-describedby="formDescription">
+            <p id="formDescription" class="visually-hidden">Utilisez ce formulaire pour créer un nouveau compte utilisateur.</p>
+
+            <!-- Username -->
             <div class="mb-3">
                 <label asp-for="Username" class="form-label">Nom d'utilisateur</label>
-                <input asp-for="Username" class="form-control" placeholder="Entrez votre nom" />
-                <span asp-validation-for="Username" class="text-danger"></span>
+                <input asp-for="Username"
+                       class="form-control"
+                       placeholder="Entrez votre nom"
+                       aria-required="true" required />
+                <span asp-validation-for="Username" class="text-danger" role="alert" aria-live="assertive"></span>
             </div>
 
+            <!-- Email -->
             <div class="mb-3">
                 <label asp-for="Email" class="form-label">Adresse mail</label>
-                <input asp-for="Email" class="form-control" placeholder="Entrez votre addresse mail" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <input asp-for="Email"
+                       class="form-control"
+                       placeholder="Entrez votre adresse mail"
+                       type="email"
+                       aria-required="true" required />
+                <span asp-validation-for="Email" class="text-danger" role="alert" aria-live="assertive"></span>
             </div>
 
+            <!-- Password -->
             <div class="mb-3">
                 <label asp-for="Password" class="form-label">Mot de passe</label>
-                <input asp-for="Password" type="password" class="form-control" placeholder="Entrez votre mot de passe" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                <input asp-for="Password"
+                       class="form-control"
+                       type="password"
+                       placeholder="Entrez votre mot de passe"
+                       aria-required="true" required />
+                <span asp-validation-for="Password" class="text-danger" role="alert" aria-live="assertive"></span>
             </div>
 
+            <!-- Confirm Password -->
             <div class="mb-3">
                 <label asp-for="ConfirmPassword" class="form-label">Confirmez le mot de passe</label>
-                <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirmez votre mot de passe" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                <input asp-for="ConfirmPassword"
+                       class="form-control"
+                       type="password"
+                       placeholder="Confirmez votre mot de passe"
+                       aria-required="true" required />
+                <span asp-validation-for="ConfirmPassword" class="text-danger" role="alert" aria-live="assertive"></span>
             </div>
 
-            <div asp-validation-summary="All" class="text-danger"></div>
+            <!-- Summary -->
+            <div asp-validation-summary="All" class="text-danger" role="alert" aria-live="assertive"></div>
 
-            <button type="submit" class="btn btn-custom w-100">Register</button>
+            <!-- Submit -->
+            <button type="submit" class="btn btn-custom w-100">Créer mon compte</button>
         </form>
     </div>
 </div>

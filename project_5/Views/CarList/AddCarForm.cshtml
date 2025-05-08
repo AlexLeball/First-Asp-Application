@@ -1,244 +1,245 @@
 ﻿@using project_5.Models.ViewModels
 @model AddCarViewModel
 
-
 <form asp-controller="CarList" asp-action="AddCar" method="post" enctype="multipart/form-data">
-<div class="form-container">    
-    <h1 class="page-title">Ajouter une voiture</h1>
+    <div class="form-container">
+        <h1 class="page-title">Ajouter une voiture</h1>
 
-    <!-- Sélection de la marque -->
-    <div class="form-group">
-        <label for="brandDropdown">Marque</label>
-        <div class="d-flex">
-            <select id="brandDropdown" name="BrandId" class="form-control" required>
-                <option value="">-- Sélectionner une marque --</option>
-                @foreach (var brand in Model.Brands)
+        <!-- Sélection de la marque -->
+        <div class="form-group">
+            <label for="brandDropdown">Marque</label>
+            <div class="d-flex align-items-start">
+                <select id="brandDropdown" name="BrandId" class="form-control" required aria-required="true">
+                    <option value="">-- Sélectionner une marque --</option>
+                    @foreach (var brand in Model.Brands)
+                    {
+                        <option value="@brand.Id">@brand.Name</option>
+                    }
+                </select>
+                <button type="button"
+                        class="btn btn-secondary ms-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#addBrandModal"
+                        aria-label="Ajouter une nouvelle marque">
+                    + Nouvelle marque
+                </button>
+            </div>
+            <span class="text-danger" asp-validation-for="BrandId" role="alert" aria-live="assertive"></span>
+        </div>
+
+        <!-- Sélection du modèle -->
+        <div class="form-group mt-3">
+            <label for="carModelDropdown">Modèle</label>
+            <div class="d-flex align-items-start">
+                <select id="carModelDropdown" name="CarModelId" class="form-control" required aria-required="true">
+                    <option value="">-- Sélectionner un modèle --</option>
+                    @foreach (var carModel in Model.CarModels)
+                    {
+                        <option value="@carModel.Id">@carModel.Model</option>
+                    }
+                </select>
+                <button type="button"
+                        class="btn btn-secondary ms-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#addCarModelModal"
+                        aria-label="Ajouter un nouveau modèle">
+                    + Nouveau modèle
+                </button>
+            </div>
+            <span class="text-danger" asp-validation-for="CarModelId" role="alert" aria-live="assertive"></span>
+        </div>
+
+        <!-- Informations supplémentaires -->
+        <div class="form-group mt-3">
+            <label for="year">Année</label>
+            <select id="year" name="Year" class="form-control" required aria-required="true">
+                <option value="">-- Sélectionner une année --</option>
+                @for (int i = DateTime.Now.Year; i >= 1990; i--)
                 {
-                    <option value="@brand.Id">@brand.Name</option>
+                    <option value="@i">@i</option>
                 }
             </select>
-            <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#addBrandModal">
-                + Nouvelle marque
-            </button>
+            <span class="text-danger" asp-validation-for="Year" role="alert" aria-live="assertive"></span>
         </div>
-        <span class="text-danger" asp-validation-for="BrandId"></span>
-    </div>
 
-    <!-- Sélection du modèle -->
-    <div class="form-group mt-3">
-        <label for="carModelDropdown">Modèle</label>
-        <div class="d-flex">
-            <select id="carModelDropdown" name="CarModelId" class="form-control" required>
-                <option value="">-- Sélectionner un modèle --</option>
-                @foreach (var carModel in Model.CarModels)
-                {
-                    <option value="@carModel.Id">@carModel.Model</option>
-                }
-            </select>
-            <button type="button" class="btn btn-secondary ms-2" data-bs-toggle="modal" data-bs-target="#addCarModelModal">
-                + Nouveau modèle
-            </button>
+        <div class="form-group mt-3">
+            <label for="finition">Finition</label>
+            <input type="text" id="finition" name="Finition" class="form-control" required aria-required="true" />
+            <span class="text-danger" asp-validation-for="Finition" role="alert" aria-live="assertive"></span>
         </div>
-        <span class="text-danger" asp-validation-for="CarModelId"></span>
-    </div>
 
-    <!-- Informations supplémentaires -->
-    <div class="form-group mt-3">
-        <label for="year">Année</label>
-        <select id="year" name="Year" class="form-control" required>
-            <option value="">-- Sélectionner une année --</option>
-            @for (int i = DateTime.Now.Year; i >= 1990; i--)
-            {
-                <option value="@i">@i</option>
-            }
-        </select>
-        <span class="text-danger" asp-validation-for="Year"></span>
-    </div>
-
-    <div class="form-group mt-3">
-        <label for="finition">Finition</label>
-        <input type="text" id="finition" name="Finition" class="form-control" required />
-        <span class="text-danger" asp-validation-for="Finition"></span>
-    </div>
-
-    <div class="form-group mt-3">
-        <label for="purchasePrice">Prix d'achat</label>
-        <input type="number" id="purchasePrice" name="PurchasePrice" class="form-control" required />
-        <span class="text-danger" asp-validation-for="PurchasePrice"></span>
-    </div>
-
-    <div class="form-group mt-3">
-        <label for="availableDate">Disponible à partir du</label>
-        <input type="date" id="availableDate" name="AvailableDate" class="form-control" required />
-        <span class="text-danger" asp-validation-for="AvailableDate"></span>
-    </div>
-
-    <div class="form-group mt-3">
-        <label for="CarPhotoFile">Photo de la voiture</label>
-        <input type="file" id="CarPhotoFile" name="CarPhotoFile" class="form-control" />
-        <span class="text-danger" asp-validation-for="CarPhotoFile"></span>
-    </div>
-
-    <!-- Section réparation -->
-    <div class="form-group mt-4">
-        <h4>Réparations</h4>
-        <label for="repairPrice">Prix de la réparation</label>
-        <input type="number" id="repairPrice" name="Repairs[0].Price" class="form-control" />
-        <span class="text-danger" asp-validation-for="Repairs[0].Price"></span>
-    </div>
-
-    <div class="form-group mt-3">
-        <label for="repairDescription">Description de la réparation</label>
-        <textarea id="repairDescription" name="Repairs[0].Description" class="form-control"></textarea>
-        <span class="text-danger" asp-validation-for="Repairs[0].Description"></span>
-    </div>
-
-    <div class="btn-custom-add-space">
-        <button type="button" class="btn btn-custom-add mt-3" onclick="addRepair()">Ajouter la réparation</button>
-
-        <button type="submit" class="btn btn-custom-add mt-3">Ajouter la voiture</button>
-    </div>
-
-    <!-- Modal : Ajouter une marque -->
-    <div class="modal fade" id="addBrandModal" tabindex="-1" aria-labelledby="addBrandModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Ajouter une marque</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="text" id="newBrandName" class="form-control" placeholder="Nom de la marque" />
-                    <span id="brandErrorMessage" class="text-danger"></span>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-custom" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-custom" onclick="addBrand()">Ajouter la marque</button>
-                </div>
-            </div>
+        <div class="form-group mt-3">
+            <label for="purchasePrice">Prix d'achat</label>
+            <input type="number" id="purchasePrice" name="PurchasePrice" class="form-control" required aria-required="true" />
+            <span class="text-danger" asp-validation-for="PurchasePrice" role="alert" aria-live="assertive"></span>
         </div>
-    </div>
 
-    <!-- Modal : Ajouter un modèle -->
-    <div class="modal fade" id="addCarModelModal" tabindex="-1" aria-labelledby="addCarModelModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Ajouter un modèle</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="text" id="newCarModelName" class="form-control" placeholder="Nom du modèle" />
-                    <span id="carModelErrorMessage" class="text-danger"></span>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-custom" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-custom" onclick="addCarModel()">Ajouter le modèle</button>
-                </div>
-            </div>
+        <div class="form-group mt-3">
+            <label for="availableDate">Disponible à partir du</label>
+            <input type="date" id="availableDate" name="AvailableDate" class="form-control" required aria-required="true" />
+            <span class="text-danger" asp-validation-for="AvailableDate" role="alert" aria-live="assertive"></span>
         </div>
-    </div>
 
-    <!-- Container pour les réparations dynamiques -->
-        <div id="repairMessage" class="alert alert-success mt-3 d-none" role="alert">
+        <div class="form-group mt-3">
+            <label for="CarPhotoFile">Photo de la voiture</label>
+            <input type="file" id="CarPhotoFile" name="CarPhotoFile" class="form-control" aria-describedby="fileHelp" />
+            <small id="fileHelp" class="form-text text-muted">Format accepté : JPG, PNG.</small>
+            <span class="text-danger" asp-validation-for="CarPhotoFile" role="alert" aria-live="assertive"></span>
+        </div>
+
+        <!-- Section réparation -->
+        <fieldset class="form-group mt-4">
+            <legend class="h4">Réparations</legend>
+
+            <label for="repairPrice">Prix de la réparation</label>
+            <input type="number" id="repairPrice" name="Repairs[0].Price" class="form-control" />
+            <span class="text-danger" asp-validation-for="Repairs[0].Price" role="alert" aria-live="assertive"></span>
+
+            <label for="repairDescription" class="mt-3">Description de la réparation</label>
+            <textarea id="repairDescription" name="Repairs[0].Description" class="form-control"></textarea>
+            <span class="text-danger" asp-validation-for="Repairs[0].Description" role="alert" aria-live="assertive"></span>
+        </fieldset>
+
+        <!-- Success message -->
+        <div id="repairMessage" class="alert alert-success mt-3 d-none" role="alert" aria-live="polite">
             Réparation ajoutée avec succès !
         </div>
 
-        <div id="repairsContainer"></div>
-        </div>
-</form>
+        <div id="repairsContainer" aria-live="polite"></div>
 
+        <div class="btn-custom-add-space">
+            <button type="button" class="btn btn-custom-add mt-3" onclick="addRepair()">Ajouter la réparation</button>
+            <button type="submit" class="btn btn-custom-add mt-3">Ajouter la voiture</button>
+        </div>
+
+        <!-- Modal : Ajouter une marque -->
+        <div class="modal fade" id="addBrandModal" tabindex="-1" aria-labelledby="addBrandModalLabel" aria-hidden="true" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addBrandModalLabel">Ajouter une marque</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="newBrandName" class="form-label">Nom de la marque</label>
+                        <input type="text" id="newBrandName" class="form-control" placeholder="Nom de la marque" aria-describedby="brandErrorMessage" />
+                        <span id="brandErrorMessage" class="text-danger" role="alert" aria-live="assertive"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-custom" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-custom" onclick="addBrand()">Ajouter la marque</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal : Ajouter un modèle -->
+        <div class="modal fade" id="addCarModelModal" tabindex="-1" aria-labelledby="addCarModelModalLabel" aria-hidden="true" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addCarModelModalLabel">Ajouter un modèle</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="newCarModelName" class="form-label">Nom du modèle</label>
+                        <input type="text" id="newCarModelName" class="form-control" placeholder="Nom du modèle" aria-describedby="carModelErrorMessage" />
+                        <span id="carModelErrorMessage" class="text-danger" role="alert" aria-live="assertive"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-custom" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-custom" onclick="addCarModel()">Ajouter le modèle</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 
 <script>
     var repairCount = 1;
 
     function addRepair() {
-        var repairSection = document.createElement('div');
-        repairSection.classList.add('repair-entry');
+        var repairSection = document.createElement('fieldset');
+        repairSection.classList.add('form-group', 'mt-3');
         repairSection.innerHTML = `
-            <label for="repairPrice_${repairCount}">Prix de la réparation</label>
-            <input type="number" id="repairPrice_${repairCount}" name="Repairs[${repairCount}].Price" class="form-control" />
+                <legend class="h6">Réparation ${repairCount + 1}</legend>
+                <label for="repairPrice_${repairCount}">Prix de la réparation</label>
+                <input type="number" id="repairPrice_${repairCount}" name="Repairs[${repairCount}].Price" class="form-control" />
 
-            <label for="repairDescription_${repairCount}" class="mt-3">Description de la réparation</label>
-            <textarea id="repairDescription_${repairCount}" name="Repairs[${repairCount}].Description" class="form-control"></textarea>
-        `;
-
+                <label for="repairDescription_${repairCount}" class="mt-3">Description de la réparation</label>
+                <textarea id="repairDescription_${repairCount}" name="Repairs[${repairCount}].Description" class="form-control"></textarea>
+            `;
         document.getElementById('repairsContainer').appendChild(repairSection);
+
         repairCount++;
 
-        // Show success message
         var messageEl = document.getElementById('repairMessage');
         messageEl.classList.remove('d-none');
         messageEl.textContent = "Réparation ajoutée avec succès !";
 
-        // Optionally hide after a few seconds
         setTimeout(() => {
             messageEl.classList.add('d-none');
         }, 3000);
     }
 
-
     function addBrand() {
         var brandName = document.getElementById('newBrandName').value;
         if (!brandName) {
-            document.getElementById('brandErrorMessage').innerText = "Please enter a brand name.";
+            document.getElementById('brandErrorMessage').innerText = "Veuillez entrer un nom de marque.";
             return;
         }
 
         fetch('/CarList/AddBrand', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ BrandName: brandName }),
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                var brandDropdown = document.getElementById('brandDropdown');
-                brandDropdown.innerHTML = '<option value="">Select a brand</option>';
-                data.brands.forEach(function(brand) {
-                    var option = document.createElement("option");
-                    option.value = brand.id;
-                    option.text = brand.name;
-                    brandDropdown.appendChild(option);
-                });
-                $('#addBrandModal').modal('hide');
-            } else {
-                document.getElementById('brandErrorMessage').innerText = data.message;
-            }
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    var brandDropdown = document.getElementById('brandDropdown');
+                    brandDropdown.innerHTML = '<option value="">-- Sélectionner une marque --</option>';
+                    data.brands.forEach(brand => {
+                        var option = document.createElement("option");
+                        option.value = brand.id;
+                        option.text = brand.name;
+                        brandDropdown.appendChild(option);
+                    });
+                    $('#addBrandModal').modal('hide');
+                } else {
+                    document.getElementById('brandErrorMessage').innerText = data.message;
+                }
+            });
     }
 
     function addCarModel() {
         var modelName = document.getElementById('newCarModelName').value;
         if (!modelName) {
-            document.getElementById('carModelErrorMessage').innerText = "Please enter a model name.";
+            document.getElementById('carModelErrorMessage').innerText = "Veuillez entrer un nom de modèle.";
             return;
         }
 
         fetch('/CarList/AddCarModel', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ModelName: modelName }),
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                var carModelDropdown = document.getElementById('carModelDropdown');
-                carModelDropdown.innerHTML = '<option value="">Select a model</option>';
-                data.carModels.forEach(function(carModel) {
-                    var option = document.createElement("option");
-                    option.value = carModel.id;
-                    option.text = carModel.model;
-                    carModelDropdown.appendChild(option);
-                });
-                $('#addCarModelModal').modal('hide');
-            } else {
-                document.getElementById('carModelErrorMessage').innerText = data.message;
-            }
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    var carModelDropdown = document.getElementById('carModelDropdown');
+                    carModelDropdown.innerHTML = '<option value="">-- Sélectionner un modèle --</option>';
+                    data.carModels.forEach(carModel => {
+                        var option = document.createElement("option");
+                        option.value = carModel.id;
+                        option.text = carModel.model;
+                        carModelDropdown.appendChild(option);
+                    });
+                    $('#addCarModelModal').modal('hide');
+                } else {
+                    document.getElementById('carModelErrorMessage').innerText = data.message;
+                }
+            });
     }
 </script>

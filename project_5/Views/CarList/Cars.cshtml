@@ -1,34 +1,37 @@
 ﻿@using project_5.Models.Entities
 @model List<Car>
 
-
-
 @{
     ViewData["Title"] = "Nos Voitures";
 }
 
-<div class="centered-container">
-
-    <h1 class="page-title">Nos Voitures</h1>
+<div class="centered-container" role="main" aria-labelledby="page-title">
+    <h1 id="page-title" class="page-title">Nos Voitures</h1>
 
     @if (User.IsInRole("Admin"))
     {
-        <a class="btn btn-custom-back" href="@Url.Action("AddCarForm", "CarList")"> + Ajouter une Voiture</a>
+        <a class="btn btn-custom-back" href="@Url.Action("AddCarForm", "CarList")" role="button" aria-label="Ajouter une voiture">
+            + Ajouter une Voiture
+        </a>
     }
 
-    <div class="car-grid">
+    <div class="car-grid" role="list">
         @foreach (var car in Model)
         {
-            <div class="car-item">
-                <a href="@Url.Action("CarDetails", "CarList", new { id = car.Id })">
+            <div class="car-item" role="listitem">
+                <a href="@Url.Action("CarDetails", "CarList", new { id = car.Id })"
+                   aria-label="Voir les détails de la voiture @car.Brand.Name @car.CarModel.Model, année @car.Year">
                     <div class="car-content">
-                        <img src="@car.UrlPhoto" alt="Car Image" />
+                        <img src="@car.UrlPhoto"
+                             alt="Photo de la @car.Brand.Name @car.CarModel.Model, finition @car.Finition, année @car.Year"
+                             class="img-fluid" />
+
                         <div class="car-info">
-                           <h5>Prix de vente @car.SalePrice</h5>
-                            <p>Année @car.Year</p>
-                            <p>Marque @car.Brand.Name </p>
-                            <p>Modèle @car.CarModel.Model</p>
-                           <p>Finition: @car.Finition</p>
+                            <h2 class="h5" aria-label="Prix de vente">Prix : @car.SalePrice €</h2>
+                            <p><strong>Année :</strong> @car.Year</p>
+                            <p><strong>Marque :</strong> @car.Brand.Name</p>
+                            <p><strong>Modèle :</strong> @car.CarModel.Model</p>
+                            <p><strong>Finition :</strong> @car.Finition</p>
                         </div>
                     </div>
                 </a>

@@ -1,32 +1,49 @@
 ﻿@model LoginViewModel
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Connexion";
 }
 
-<h2 class="text-center">Se Connecter</h2>
+<h2 class="text-center" id="login-title">Se Connecter</h2>
 
-<div class="row justify-content-center">
+<div class="row justify-content-center" role="main" aria-labelledby="login-title">
     <div class="col-md-4">
-        <form asp-action="Login" method="post">
+        <form asp-action="Login" method="post" aria-describedby="login-form-help">
             <div class="mb-3">
-                <label asp-for="Email" class="form-label">Addresse mail</label>
-                <input asp-for="Email" class="form-control" placeholder="Enrtrez votre addresse mail" />
+                <label asp-for="Email" class="form-label">Adresse mail</label>
+                <input asp-for="Email"
+                       class="form-control"
+                       placeholder="Entrez votre adresse mail"
+                       aria-required="true"
+                       aria-label="Adresse mail" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="Password" class="form-label">Mot de passe</label>
-                <input asp-for="Password" type="password" class="form-control" placeholder="Enrtrez votre mot de passe" />
+                <input asp-for="Password"
+                       type="password"
+                       class="form-control"
+                       placeholder="Entrez votre mot de passe"
+                       aria-required="true"
+                       aria-label="Mot de passe" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="login-buttons">
-                <button type="submit" class="btn btn-custom">Se Connecter</button>
-                <span>ou</span>
-                <a class="btn btn-custom link-connect text-light" asp-controller="User" asp-action="Register">S'inscrire</a>
+            <div asp-validation-summary="All" class="text-danger" role="alert" aria-live="polite"></div>
+
+            <div id="login-form-help" class="visually-hidden">
+                Formulaire de connexion à votre compte. Remplissez les champs requis.
             </div>
 
+            <div class="login-buttons d-flex align-items-center justify-content-between mt-4">
+                <button type="submit" class="btn btn-custom" aria-label="Se connecter à votre compte">Se Connecter</button>
+                <span aria-hidden="true">ou</span>
+                <a class="btn btn-custom link-connect text-light"
+                   asp-controller="User"
+                   asp-action="Register"
+                   role="button"
+                   aria-label="Créer un compte">S'inscrire</a>
+            </div>
         </form>
     </div>
 </div>
